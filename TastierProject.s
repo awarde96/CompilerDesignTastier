@@ -188,6 +188,8 @@ Main
     B       MainBody
    ;Name: i, Type: integer, Kind: var, Sort: scalar
    ;Name: xy, Type: integer, Kind: const, Sort: scalar
+   ;Name: xyz, Type: integer, Kind: var, Sort: array
+   ;Rows: 2, Columns: 1
    ;Name: SumUp, Type: undef, Kind: proc, Sort: scalar
    ;Name: main, Type: undef, Kind: proc, Sort: scalar
 

@@ -7,6 +7,8 @@ public class Obj { // properties of declared symbol
    public int kind;    // var, proc or scope
    public int type;    // its type if var (undef for proc)
    public int sort;    // if obj is scalar or array
+   public int rows;    //number of rows
+   public int columns; //number of columns
    public int level;   // lexic level: 0 = global; >= 1 local
    public int adr;     // address (displacement) in scope
    public Obj next;    // ptr to next object in scope
@@ -43,6 +45,8 @@ public class SymbolTable {
       undefObj.kind = var;
       undefObj.type = undef;
       undefObj.sort = none;
+      undefObj.rows = 0;
+      undefObj.columns = 0;
       undefObj.level = 0;
       undefObj.adr = 0;
       undefObj.next = null;
@@ -108,6 +112,9 @@ public class SymbolTable {
 
         Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}",temp.name, typeName, kindName, sortName);
 
+        if (sort == 2){
+          Console.WriteLine("   ;Rows: {0}, Columns: {1}", temp.rows, temp.columns);
+        }
         temp = temp.next;
       }
       topScope = topScope.outer;
@@ -136,10 +143,11 @@ public class SymbolTable {
    }
 
 // create new object node in current scope
-   public Obj NewObj(string name, int kind, int type, int sort) {
+   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns) {
       Obj p, last;
       Obj obj = new Obj();
       obj.name = name; obj.kind = kind; obj.sort = sort;
+      obj.rows = rows; obj.columns = columns;
       obj.type = type; obj.level = curLevel;
       obj.next = null;
       p = topScope.locals; last = null;

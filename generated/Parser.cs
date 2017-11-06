@@ -36,7 +36,7 @@ public class Parser {
 	public const int _number = 1;
 	public const int _ident = 2;
 	public const int _string = 3;
-	public const int maxT = 37;
+	public const int maxT = 40;
 
 	const bool T = true;
 	const bool x = false;
@@ -129,7 +129,7 @@ const int // object kinds
 		} else if (la.kind == 5) {
 			Get();
 			op = Op.SUB; 
-		} else SynErr(38);
+		} else SynErr(41);
 	}
 
 	void Expr(out int reg,        // load value of Expr into register
@@ -199,7 +199,7 @@ out typeR);
 			op = Op.GEQ; 
 			break;
 		}
-		default: SynErr(39); break;
+		default: SynErr(42); break;
 		}
 	}
 
@@ -265,7 +265,7 @@ out type);
 			Expect(9);
 			break;
 		}
-		default: SynErr(40); break;
+		default: SynErr(43); break;
 		}
 	}
 
@@ -297,14 +297,14 @@ out type);
 				Get();
 			}
 			op = Op.MOD; 
-		} else SynErr(41);
+		} else SynErr(44);
 	}
 
 	void ProcDecl(string progName) {
 		Obj obj; string procName; 
 		Expect(15);
 		Ident(out procName);
-		obj = tab.NewObj(procName, proc, undef,1);
+		obj = tab.NewObj(procName, proc, undef,1,0,0);
 		if (procName == "main")
 		  if (tab.curLevel == 0)
 		     tab.mainPresent = true;
@@ -344,14 +344,14 @@ out type);
 	}
 
 	void VarDecl() {
-		string name; int type; 
+		string name; int type; int sort = 1;
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, var, type,1); 
+		tab.NewObj(name, var, type, sort,0,0); 
 		while (la.kind == 35) {
 			Get();
 			Ident(out name);
-			tab.NewObj(name, var, type,1); 
+			tab.NewObj(name, var, type, sort,0,0); 
 		}
 		Expect(25);
 	}
@@ -384,7 +384,7 @@ out type);
 				  gen.Call(name);
 				else SemErr("object is not a procedure");
 				
-			} else SynErr(42);
+			} else SynErr(45);
 			break;
 		}
 		case 26: {
@@ -461,7 +461,7 @@ out type);
 			} else if (la.kind == 3) {
 				String(out text);
 				gen.WriteString(text); 
-			} else SynErr(43);
+			} else SynErr(46);
 			Expect(25);
 			break;
 		}
@@ -497,7 +497,7 @@ out type);
 			tab.CloseSubScope(); 
 			break;
 		}
-		default: SynErr(44); break;
+		default: SynErr(47); break;
 		}
 	}
 
@@ -524,7 +524,7 @@ out typeR);
 		Expect(36);
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, constant, type,1); 
+		tab.NewObj(name, constant, type,1,0,0); 
 		Expect(18);
 		Expect(1);
 		type = integer;
@@ -540,11 +540,13 @@ out typeR);
 		Ident(out progName);
 		tab.OpenScope(); 
 		Expect(16);
-		while (la.kind == 33 || la.kind == 34 || la.kind == 36) {
+		while (StartOf(5)) {
 			if (la.kind == 33 || la.kind == 34) {
 				VarDecl();
-			} else {
+			} else if (la.kind == 36) {
 				ConstantDecl();
+			} else {
+				ArrayDecl();
 			}
 		}
 		while (la.kind == 15) {
@@ -552,6 +554,27 @@ out typeR);
 		}
 		tab.CloseScope(); 
 		Expect(17);
+	}
+
+	void ArrayDecl() {
+		int r; int c; string name; int type; int sort = 2;
+		Expect(37);
+		Type(out type);
+		Ident(out name);
+		Expect(38);
+		Expect(1);
+		type = integer;
+		r = Convert.ToInt32(t.val);
+		
+		Expect(39);
+		Expect(38);
+		Expect(1);
+		type = integer;
+		c = Convert.ToInt32(t.val);
+		
+		Expect(39);
+		tab.NewObj(name, var, type,sort,r,c); 
+		Expect(25);
 	}
 
 	void Type(out int type) {
@@ -562,7 +585,7 @@ out typeR);
 		} else if (la.kind == 34) {
 			Get();
 			type = boolean; 
-		} else SynErr(45);
+		} else SynErr(48);
 	}
 
 
@@ -577,11 +600,12 @@ out typeR);
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,T,x, T,T,T,T, x,x,x,x, x,x,x},
-		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,T,x, T,T,T,T, x,x,x,x, x,x,x,x, x,x},
+		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,x, T,T,x,x, x,x}
 
 	};
 } // end Parser
@@ -632,15 +656,18 @@ public class Errors {
 			case 34: s = "\"bool\" expected"; break;
 			case 35: s = "\",\" expected"; break;
 			case 36: s = "\"const\" expected"; break;
-			case 37: s = "??? expected"; break;
-			case 38: s = "invalid AddOp"; break;
-			case 39: s = "invalid RelOp"; break;
-			case 40: s = "invalid Primary"; break;
-			case 41: s = "invalid MulOp"; break;
-			case 42: s = "invalid Stat"; break;
-			case 43: s = "invalid Stat"; break;
-			case 44: s = "invalid Stat"; break;
-			case 45: s = "invalid Type"; break;
+			case 37: s = "\"array\" expected"; break;
+			case 38: s = "\"[\" expected"; break;
+			case 39: s = "\"]\" expected"; break;
+			case 40: s = "??? expected"; break;
+			case 41: s = "invalid AddOp"; break;
+			case 42: s = "invalid RelOp"; break;
+			case 43: s = "invalid Primary"; break;
+			case 44: s = "invalid MulOp"; break;
+			case 45: s = "invalid Stat"; break;
+			case 46: s = "invalid Stat"; break;
+			case 47: s = "invalid Stat"; break;
+			case 48: s = "invalid Type"; break;
 
 			default: s = "error " + n; break;
 		}

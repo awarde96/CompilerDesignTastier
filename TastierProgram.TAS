@@ -4,6 +4,7 @@
 program Test {
    int i;
    const int xy = 0;
+   array int xyz[2][1];
 
    void SumUp() {
       int j, sum;
