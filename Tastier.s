@@ -110,10 +110,10 @@ SumUp
     LDR     R1, =2          ; number of local variables
     BL      enter           ; build new stack frame
     B       SumUpBody
-   ;Name: j, Type: integer, Kind: var
-   ;Name: sum, Type: integer, Kind: var
-   ;Name: Subtract, Type: undef, Kind: proc
-   ;Name: Add, Type: undef, Kind: proc
+   ;Name: j, Type: integer, Kind: var, Sort: scalar
+   ;Name: sum, Type: integer, Kind: var, Sort: scalar
+   ;Name: Subtract, Type: undef, Kind: proc, Sort: scalar
+   ;Name: Add, Type: undef, Kind: proc, Sort: scalar
 MainBody
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
@@ -157,7 +157,7 @@ Main
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-   ;Name: i, Type: integer, Kind: var
-   ;Name: xy, Type: integer, Kind: const
-   ;Name: SumUp, Type: undef, Kind: proc
-   ;Name: main, Type: undef, Kind: proc
+   ;Name: i, Type: integer, Kind: var, Sort: scalar
+   ;Name: xy, Type: integer, Kind: const, Sort: scalar
+   ;Name: SumUp, Type: undef, Kind: proc, Sort: scalar
+   ;Name: main, Type: undef, Kind: proc, Sort: scalar

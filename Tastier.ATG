@@ -6,6 +6,9 @@ COMPILER Tastier
    const int // types
       undef = 0, integer = 1, boolean = 2;
 
+  const int // sorts
+      none = 0, scalar = 1, array = 2;
+
    public SymbolTable tab;
    public CodeGenerator gen;
 
@@ -149,7 +152,7 @@ ProcDecl<string progName>
                          (. Obj obj; string procName; .)
 = "void"
   Ident<out procName>    (.
-                            obj = tab.NewObj(procName, proc, undef);
+                            obj = tab.NewObj(procName, proc, undef,1);
                             if (procName == "main")
                                if (tab.curLevel == 0)
                                   tab.mainPresent = true;
@@ -361,9 +364,9 @@ Type<out int type>
 
 VarDecl                  (. string name; int type; .)
 = Type<out type>
-  Ident<out name>        (. tab.NewObj(name, var, type); .)
+  Ident<out name>        (. tab.NewObj(name, var, type,1); .)
   { ","
-    Ident<out name>      (. tab.NewObj(name, var, type); .)
+    Ident<out name>      (. tab.NewObj(name, var, type,1); .)
   } ";"
 .
 
@@ -376,10 +379,9 @@ ConstantDecl                (. int n; string name; int type; int reg;.)
                          .)
   "const"
   Type<out type>
-  Ident<out name>        (. tab.NewObj(name, constant, type); .)
+  Ident<out name>        (. tab.NewObj(name, constant, type,1); .)
   "="
     number               (.
-
                             type = integer;
                             n = Convert.ToInt32(t.val);
                             gen.LoadConstant(reg, n);

@@ -6,7 +6,7 @@ public class Obj { // properties of declared symbol
    public string name; // its name
    public int kind;    // var, proc or scope
    public int type;    // its type if var (undef for proc)
-   //public int sort;    // if obj is scalar or array
+   public int sort;    // if obj is scalar or array
    public int level;   // lexic level: 0 = global; >= 1 local
    public int adr;     // address (displacement) in scope
    public Obj next;    // ptr to next object in scope
@@ -24,8 +24,8 @@ public class SymbolTable {
    const int // types
       undef = 0, integer = 1, boolean = 2;
 
-  //const int // sort
-  //    none = 0, scalar = 1, array = 2;
+  const int // sort
+      none = 0, scalar = 1, array = 2;
 
    public Obj topScope; // topmost procedure scope
    public int curLevel; // nesting level of current scope
@@ -42,7 +42,7 @@ public class SymbolTable {
       undefObj.name = "undef";
       undefObj.kind = var;
       undefObj.type = undef;
-      //undefObj.sort = none;
+      undefObj.sort = none;
       undefObj.level = 0;
       undefObj.adr = 0;
       undefObj.next = null;
@@ -65,12 +65,13 @@ public class SymbolTable {
 // close current scope
    public void CloseScope() {
       Obj temp = topScope.locals;
-      int type, kind;
-      string typeName,kindName;
+      int type, kind, sort;
+      string typeName,kindName,sortName;
 
       while(temp != null){
         type = temp.type;
         kind = temp.kind;
+        sort = temp.sort;
 
         if(type ==0){
           typeName = "undef";
@@ -95,7 +96,17 @@ public class SymbolTable {
           kindName = "const";
         }
 
-        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}",temp.name, typeName, kindName);
+        if(sort == 0){
+          sortName = "none";
+        }
+        else if(sort == 1){
+          sortName = "scalar";
+        }
+        else{
+          sortName = "array";
+        }
+
+        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}",temp.name, typeName, kindName, sortName);
 
         temp = temp.next;
       }
@@ -125,10 +136,10 @@ public class SymbolTable {
    }
 
 // create new object node in current scope
-   public Obj NewObj(string name, int kind, int type) {
+   public Obj NewObj(string name, int kind, int type, int sort) {
       Obj p, last;
       Obj obj = new Obj();
-      obj.name = name; obj.kind = kind;
+      obj.name = name; obj.kind = kind; obj.sort = sort;
       obj.type = type; obj.level = curLevel;
       obj.next = null;
       p = topScope.locals; last = null;

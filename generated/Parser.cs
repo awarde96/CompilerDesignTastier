@@ -55,6 +55,9 @@ const int // object kinds
    const int // types
       undef = 0, integer = 1, boolean = 2;
 
+  const int // sorts
+      none = 0, scalar = 1, array = 2;
+
    public SymbolTable tab;
    public CodeGenerator gen;
 
@@ -301,7 +304,7 @@ out type);
 		Obj obj; string procName; 
 		Expect(15);
 		Ident(out procName);
-		obj = tab.NewObj(procName, proc, undef);
+		obj = tab.NewObj(procName, proc, undef,1);
 		if (procName == "main")
 		  if (tab.curLevel == 0)
 		     tab.mainPresent = true;
@@ -344,11 +347,11 @@ out type);
 		string name; int type; 
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, var, type); 
+		tab.NewObj(name, var, type,1); 
 		while (la.kind == 35) {
 			Get();
 			Ident(out name);
-			tab.NewObj(name, var, type); 
+			tab.NewObj(name, var, type,1); 
 		}
 		Expect(25);
 	}
@@ -521,7 +524,7 @@ out typeR);
 		Expect(36);
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, constant, type); 
+		tab.NewObj(name, constant, type,1); 
 		Expect(18);
 		Expect(1);
 		type = integer;
