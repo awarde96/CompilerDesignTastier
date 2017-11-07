@@ -104,6 +104,14 @@ SumUpBody
     LDR     R1, =1
     ADD     R2, R2, R1, LSL #2
     STR     R5, [R2]        ; sum
+    LDR     R5, =1
+ LDR R2, =2
+ ADD R2, R4, R2, LSL #2
+ STR R5, [R2] ; zzz
+    LDR     R5, =2
+ LDR R2, =1
+ ADD R2, R4, R2, LSL #2
+ STR R5, [R2] ; xyz
     ADD     R0, PC, #4      ; store return address
     STR     R0, [TOP]       ; in new stack frame
     B       Add
@@ -189,7 +197,9 @@ Main
    ;Name: i, Type: integer, Kind: var, Sort: scalar
    ;Name: xy, Type: integer, Kind: const, Sort: scalar
    ;Name: xyz, Type: integer, Kind: var, Sort: array
-   ;Rows: 2, Columns: 1
+   ;Rows: 2, Columns: 2
+   ;Name: zzz, Type: integer, Kind: var, Sort: array
+   ;Rows: 3, Columns: 1
    ;Name: SumUp, Type: undef, Kind: proc, Sort: scalar
    ;Name: main, Type: undef, Kind: proc, Sort: scalar
 

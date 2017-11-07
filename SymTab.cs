@@ -160,6 +160,11 @@ public class SymbolTable {
          topScope.locals = obj; else last.next = obj;
       if (kind == var)
          obj.adr = topScope.nextAdr++;
+
+      //allocating address space for an array
+      if (obj.sort == array){
+        obj.nextAdr += (obj.rows*obj.columns) + 1;
+      }
       return obj;
    }
 
