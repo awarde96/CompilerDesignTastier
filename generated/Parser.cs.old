@@ -424,7 +424,7 @@ out type);
 					 SemErr("Incompatable types");
 					}
 					
-					if (ArrayObj.level == 0)
+					if (arrayObj.level == 0)
 					  gen.StoreGlobal(reg, arrayObj.adr + rowIndex*columnIndex, name);
 					else gen.StoreLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, name);
 					
