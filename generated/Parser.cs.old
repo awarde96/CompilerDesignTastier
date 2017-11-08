@@ -357,7 +357,7 @@ out type);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; int reg; int index = 0; 
+		int type; string name; Obj obj; int reg = 0; int index = 0; String arrayName; 
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
@@ -367,7 +367,7 @@ out type);
 				Expect(1);
 				index = Convert.ToInt32(t.val);
 				if(index > obj.rows | obj.rows < 0)
-				 SemErr("Error: array index rows out of bounds");
+				 SemErr("array index rows out of bounds");
 				
 				Expect(25);
 				if (la.kind == 24) {
@@ -375,7 +375,7 @@ out type);
 					Expect(1);
 					index = Convert.ToInt32(t.val);
 					if(index > obj.columns | obj.columns < 0)
-					 SemErr("Error: array index columns out of bounds");
+					 SemErr("array index columns out of bounds");
 					
 					Expect(25);
 				}
@@ -388,15 +388,53 @@ out type);
 				if (obj.kind != var)
 				  SemErr("cannot assign to procedure");
 				
-				Expr(out reg,
+				if (StartOf(3)) {
+					Expr(out reg,
 out type);
+					if (type == obj.type)
+					  if (obj.level == 0)
+					     gen.StoreGlobal(reg, obj.adr, name);
+					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					else SemErr("incompatible types");
+					
+				} else if (la.kind == 24) {
+					Get();
+					int rowIndex = 0; int columnIndex = 1; 
+					Expect(1);
+					rowIndex = Convert.ToInt32(t.val);
+					Expect(25);
+					if (la.kind == 24) {
+						Get();
+						Expect(1);
+						columnIndex = Convert.ToInt32(t.val);
+						Expect(25);
+					}
+					Ident(out arrayName);
+					Obj arrayObj = tab.Find(arrayName);
+					
+					if(rowIndex > arrayObj.rows | rowIndex < 0){
+					 SemErr("index rows out of bounds");
+					}
+					
+					if(columnIndex > arrayObj.rows | columnIndex < 0){
+					 SemErr("index columns out of bounds");
+					}
+					
+					if(arrayObj.type != obj.type){
+					 SemErr("Incompatable types");
+					}
+					
+					if (ArrayObj.level == 0)
+					  gen.StoreGlobal(reg, arrayObj.adr + rowIndex*columnIndex, name);
+					else gen.StoreLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, name);
+					
+					if (obj.level == 0)
+					  gen.LoadGlobal(reg, obj.adr, name);
+					else
+					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					
+				} else SynErr(45);
 				Expect(27);
-				if (type == obj.type)
-				  if (obj.level == 0)
-				     gen.StoreGlobal(reg, obj.adr, name);
-				  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
-				else SemErr("incompatible types");
-				
 			} else if (la.kind == 8) {
 				Get();
 				Expect(9);
@@ -405,7 +443,7 @@ out type);
 				  gen.Call(name);
 				else SemErr("object is not a procedure");
 				
-			} else SynErr(45);
+			} else SynErr(46);
 			break;
 		}
 		case 28: {
@@ -482,7 +520,7 @@ out type);
 			} else if (la.kind == 3) {
 				String(out text);
 				gen.WriteString(text); 
-			} else SynErr(46);
+			} else SynErr(47);
 			Expect(27);
 			break;
 		}
@@ -518,7 +556,7 @@ out type);
 			tab.CloseSubScope(); 
 			break;
 		}
-		default: SynErr(47); break;
+		default: SynErr(48); break;
 		}
 	}
 
@@ -609,7 +647,7 @@ out typeR);
 		} else if (la.kind == 36) {
 			Get();
 			type = boolean; 
-		} else SynErr(48);
+		} else SynErr(49);
 	}
 
 
@@ -691,7 +729,8 @@ public class Errors {
 			case 45: s = "invalid Stat"; break;
 			case 46: s = "invalid Stat"; break;
 			case 47: s = "invalid Stat"; break;
-			case 48: s = "invalid Type"; break;
+			case 48: s = "invalid Stat"; break;
+			case 49: s = "invalid Type"; break;
 
 			default: s = "error " + n; break;
 		}

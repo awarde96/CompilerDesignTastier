@@ -83,6 +83,18 @@ SumUpBody
  LDR R2, =1
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; xyz
+ LDR R2, =5
+ ADD R2, R4, R2, LSL #2
+ STR R0, [R2] ; i
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R0, [R2] ; i
+ LDR R2, =5
+ ADD R2, R4, R2, LSL #2
+ STR R0, [R2] ; i
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R0, [R2] ; i
     ADD     R0, PC, #4      ; store return address
     STR     R0, [TOP]       ; in new stack frame
     B       Add
