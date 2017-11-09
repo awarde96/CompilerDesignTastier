@@ -314,8 +314,14 @@ out type);
 		Expect(8);
 		Expect(9);
 		Expect(16);
-		while (la.kind == 35 || la.kind == 36) {
-			VarDecl();
+		while (StartOf(2)) {
+			if (la.kind == 38) {
+				ConstantDecl();
+			} else if (la.kind == 35 || la.kind == 36) {
+				VarDecl();
+			} else {
+				ArrayDecl();
+			}
 		}
 		while (la.kind == 15) {
 			ProcDecl(progName);
@@ -328,7 +334,7 @@ out type);
 		}
 		
 		Stat();
-		while (StartOf(2)) {
+		while (StartOf(3)) {
 			Stat();
 		}
 		Expect(17);
@@ -343,6 +349,23 @@ out type);
 		
 	}
 
+	void ConstantDecl() {
+		int n; string name; int type; int reg;
+		reg = gen.GetRegister();
+		
+		Expect(38);
+		Type(out type);
+		Ident(out name);
+		tab.NewObj(name, constant, type,scalar,0,0); 
+		Expect(18);
+		Expect(1);
+		type = integer;
+		n = Convert.ToInt32(t.val);
+		gen.LoadConstant(reg, n);
+		
+		Expect(27);
+	}
+
 	void VarDecl() {
 		string name; int type; int sort = 1;
 		Type(out type);
@@ -353,6 +376,30 @@ out type);
 			Ident(out name);
 			tab.NewObj(name, var, type, sort,0,0); 
 		}
+		Expect(27);
+	}
+
+	void ArrayDecl() {
+		int r; int c = 0; string name; int type; int sort = 2;
+		Expect(39);
+		Type(out type);
+		Ident(out name);
+		Expect(24);
+		Expect(1);
+		type = integer;
+		r = Convert.ToInt32(t.val);
+		c = 1;
+		
+		Expect(25);
+		if (la.kind == 24) {
+			Get();
+			Expect(1);
+			type = integer;
+			c = Convert.ToInt32(t.val);
+			
+			Expect(25);
+		}
+		tab.NewObj(name, var, type,sort,r,c); 
 		Expect(27);
 	}
 
@@ -388,7 +435,7 @@ out type);
 				if (obj.kind != var)
 				  SemErr("cannot assign to procedure");
 				
-				if (StartOf(3)) {
+				if (StartOf(4)) {
 					Expr(out reg,
 out type);
 					if (type == obj.type)
@@ -507,7 +554,7 @@ out type);
 		case 32: {
 			Get();
 			string text; 
-			if (StartOf(3)) {
+			if (StartOf(4)) {
 				Expr(out reg,
 out type);
 				switch (type) {
@@ -549,7 +596,7 @@ out type);
 				}
 			}
 			Stat();
-			while (StartOf(2)) {
+			while (StartOf(3)) {
 				Stat();
 			}
 			Expect(17);
@@ -565,7 +612,7 @@ out int type) {
 		int typeR, regR; Op op; 
 		Primary(out reg,
 out type);
-		while (StartOf(4)) {
+		while (StartOf(5)) {
 			MulOp(out op);
 			Primary(out regR,
 out typeR);
@@ -576,30 +623,13 @@ out typeR);
 		}
 	}
 
-	void ConstantDecl() {
-		int n; string name; int type; int reg;
-		reg = gen.GetRegister();
-		
-		Expect(38);
-		Type(out type);
-		Ident(out name);
-		tab.NewObj(name, constant, type,scalar,0,0); 
-		Expect(18);
-		Expect(1);
-		type = integer;
-		n = Convert.ToInt32(t.val);
-		gen.LoadConstant(reg, n);
-		
-		Expect(27);
-	}
-
 	void Tastier() {
 		string progName; 
 		Expect(34);
 		Ident(out progName);
 		tab.OpenScope(); 
 		Expect(16);
-		while (StartOf(5)) {
+		while (StartOf(2)) {
 			if (la.kind == 35 || la.kind == 36) {
 				VarDecl();
 			} else if (la.kind == 38) {
@@ -613,30 +643,6 @@ out typeR);
 		}
 		tab.CloseScope(); 
 		Expect(17);
-	}
-
-	void ArrayDecl() {
-		int r; int c = 0; string name; int type; int sort = 2;
-		Expect(39);
-		Type(out type);
-		Ident(out name);
-		Expect(24);
-		Expect(1);
-		type = integer;
-		r = Convert.ToInt32(t.val);
-		c = 1;
-		
-		Expect(25);
-		if (la.kind == 24) {
-			Get();
-			Expect(1);
-			type = integer;
-			c = Convert.ToInt32(t.val);
-			
-			Expect(25);
-		}
-		tab.NewObj(name, var, type,sort,r,c); 
-		Expect(27);
 	}
 
 	void Type(out int type) {
@@ -664,10 +670,10 @@ out typeR);
 	static readonly bool[,] set = {
 		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,T, x,x},
 		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, T,x,T,T, T,T,x,x, x,x,x,x, x,x},
 		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
-		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,T, x,x}
+		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x}
 
 	};
 } // end Parser

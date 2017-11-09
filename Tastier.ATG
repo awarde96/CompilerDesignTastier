@@ -162,7 +162,7 @@ ProcDecl<string progName>
   '(' ')'
   '{'
      {
-     VarDecl
+     ConstantDecl | VarDecl | ArrayDecl
      }
      {
      ProcDecl<progName>

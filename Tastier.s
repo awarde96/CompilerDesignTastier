@@ -1,22 +1,26 @@
     LDR     R5, =0
+    LDR     R6, =0
 ; Procedure Subtract
 SubtractBody
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- LDR R6, [R2] ; i
-    LDR     R7, =1
-    SUB     R6, R6, R7
+ LDR R7, [R2] ; i
+    LDR     R8, =1
+    SUB     R7, R7, R8
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- STR R6, [R2] ; i
+ STR R7, [R2] ; i
     MOV     TOP, BP         ; reset top of stack
     LDR     BP, [TOP,#12]   ; and stack base pointers
     LDR     PC, [TOP]       ; return from Subtract
 Subtract
     LDR     R0, =2          ; current lexic level
-    LDR     R1, =0          ; number of local variables
+    LDR     R1, =1          ; number of local variables
     BL      enter           ; build new stack frame
     B       SubtractBody
+   ;Name: aa, Type: integer, Kind: const, Sort: scalar
+   ;Name: sss, Type: integer, Kind: var, Sort: array
+   ;Rows: 3, Columns: 4
 ; Procedure Add
 AddBody
  LDR R2, =0

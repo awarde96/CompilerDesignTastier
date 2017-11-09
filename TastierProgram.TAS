@@ -11,7 +11,10 @@ program Test {
       int j, sum;
 
       void Subtract() {
+         const int aa = 0;
+         array int sss[3][4];
          i := i - 1;
+
       }
 
       void Add() {
