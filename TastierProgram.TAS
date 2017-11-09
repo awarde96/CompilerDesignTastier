@@ -22,9 +22,10 @@ program Test {
          }
       }
 
+      j := xy;
       j := i;
       sum := 0;
-      zzz[2] := 1;
+      zzz[1] := i;
       xyz[1][2] := 2;
       i := [3]zzz;
       i := [2][2]xyz;

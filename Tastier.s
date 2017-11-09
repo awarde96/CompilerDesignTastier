@@ -65,6 +65,13 @@ Add
 SumUpBody
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
+ LDR R5, [R2] ; xy
+    ADD     R2, BP, #16
+    LDR     R1, =0
+    ADD     R2, R2, R1, LSL #2
+    STR     R5, [R2]        ; j
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
  LDR R5, [R2] ; i
     ADD     R2, BP, #16
     LDR     R1, =0
@@ -75,7 +82,9 @@ SumUpBody
     LDR     R1, =1
     ADD     R2, R2, R1, LSL #2
     STR     R5, [R2]        ; sum
-    LDR     R5, =1
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R5, [R2] ; i
  LDR R2, =2
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; zzz

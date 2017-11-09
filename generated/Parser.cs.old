@@ -213,7 +213,7 @@ out int type) {
 		case 2: {
 			Ident(out name);
 			obj = tab.Find(name); type = obj.type;
-			if (obj.kind == var) {
+			if (obj.kind == var || obj.kind == constant) {
 			  if (obj.level == 0)
 			     gen.LoadGlobal(reg, obj.adr, name);
 			  else
@@ -364,10 +364,13 @@ out type);
 			obj = tab.Find(name); 
 			if (la.kind == 24) {
 				Get();
-				Expect(1);
-				index = Convert.ToInt32(t.val);
-				if(index > obj.rows | obj.rows < 0)
-				 SemErr("array index rows out of bounds");
+				Expr(out reg,
+out type);
+				if (type == obj.type)
+				  if (obj.level == 0)
+				     gen.StoreGlobal(reg, obj.adr, name);
+				  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+				else SemErr("incompatible types");
 				
 				Expect(25);
 				if (la.kind == 24) {

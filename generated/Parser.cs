@@ -213,7 +213,7 @@ out int type) {
 		case 2: {
 			Ident(out name);
 			obj = tab.Find(name); type = obj.type;
-			if (obj.kind == var) {
+			if (obj.kind == var || obj.kind == constant) {
 			  if (obj.level == 0)
 			     gen.LoadGlobal(reg, obj.adr, name);
 			  else
