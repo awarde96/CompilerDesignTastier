@@ -440,13 +440,13 @@ out type);
 out type);
 					if (type == obj.type)
 					  if (obj.level == 0)
-					     gen.StoreGlobal(reg, obj.adr + index, name);
-					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
+					     gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
+					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
 					else SemErr("incompatible types");
 					
 				} else if (la.kind == 24) {
 					Get();
-					int rowIndex = 0; int columnIndex = 1; 
+					int rowIndex = 0; int columnIndex = 0; 
 					Expect(1);
 					rowIndex = Convert.ToInt32(t.val);
 					Expect(25);
@@ -472,13 +472,13 @@ out type);
 					}
 					
 					if (arrayObj.level == 0)
-					  gen.LoadGlobal(reg, arrayObj.adr + rowIndex*columnIndex, arrayName);
-					else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, arrayName);
+					  gen.LoadGlobal(reg, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
+					else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
 					
 					if (obj.level == 0)
-					  gen.StoreGlobal(reg, obj.adr + index , name);
+					  gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
 					else
-					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
+					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
 					
 				} else SynErr(45);
 				Expect(27);

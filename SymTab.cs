@@ -165,6 +165,9 @@ public class SymbolTable {
       if (obj.sort == array){
         obj.nextAdr += (obj.rows*obj.columns);
       }
+      else{
+        obj.nextAdr += 1;
+      }
       return obj;
    }
 
