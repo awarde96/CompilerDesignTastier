@@ -111,7 +111,7 @@ public class SymbolTable {
           sortName = "array";
         }
 
-        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}",temp.name, typeName, kindName, sortName, temp.nextAdr);
+        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}",temp.name, typeName, kindName, sortName, temp.adr);
 
         if (sort == 2){
           Console.WriteLine("   ;Rows: {0}, Columns: {1}", temp.rows, temp.columns);

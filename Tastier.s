@@ -14,6 +14,10 @@ MainBody
  LDR R2, =6
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; xyz
+    LDR     R5, =6
+ LDR R2, =13
+ ADD R2, R4, R2, LSL #2
+ STR R5, [R2] ; yyy
  LDR R2, =2
  ADD R2, R4, R2, LSL #2
  LDR R0, [R2] ; zzz
@@ -27,10 +31,12 @@ Main
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-   ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 1
+   ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 0
    ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 1
-   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 3
+   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 2
    ;Rows: 3, Columns: 1
    ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 6
    ;Rows: 6, Columns: 1
-   ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 1
+   ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 13
+   ;Rows: 4, Columns: 4
+   ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0
