@@ -218,7 +218,7 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; int reg = 0; int index = 0; String arrayName; .)
+Stat                     (. int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName; .)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
@@ -231,8 +231,8 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
     [
       "["
           number         (.
-                           index = Convert.ToInt32(t.val);
-                           if(index > obj.columns | obj.columns < 0)
+                           index2 = Convert.ToInt32(t.val);
+                           if(index2 > obj.columns | obj.columns < 0)
                              SemErr("array index columns out of bounds");
                          .)
       "]"
@@ -252,8 +252,8 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
          out type>       (.
                             if (type == obj.type)
                                if (obj.level == 0)
-                                  gen.StoreGlobal(reg, obj.adr, name);
-                               else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+                                  gen.StoreGlobal(reg, obj.adr + index, name);
+                               else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
                             else SemErr("incompatible types");
                          .)
      |"["                 (. int rowIndex = 0; int columnIndex = 1; .)
@@ -280,13 +280,13 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                            }
 
                            if (arrayObj.level == 0)
-                              gen.StoreGlobal(reg, arrayObj.adr + rowIndex*columnIndex, name);
-                           else gen.StoreLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, name);
+                              gen.LoadGlobal(reg, arrayObj.adr + rowIndex*columnIndex, arrayName);
+                           else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, arrayName);
 
                            if (obj.level == 0)
-                              gen.LoadGlobal(reg, obj.adr, name);
+                              gen.StoreGlobal(reg, obj.adr + index , name);
                            else
-                              gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+                              gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
                          .)
 
     )';'

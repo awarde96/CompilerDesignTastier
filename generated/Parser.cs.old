@@ -404,7 +404,7 @@ out type);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; int reg = 0; int index = 0; String arrayName; 
+		int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName; 
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
@@ -420,8 +420,8 @@ out type);
 				if (la.kind == 24) {
 					Get();
 					Expect(1);
-					index = Convert.ToInt32(t.val);
-					if(index > obj.columns | obj.columns < 0)
+					index2 = Convert.ToInt32(t.val);
+					if(index2 > obj.columns | obj.columns < 0)
 					 SemErr("array index columns out of bounds");
 					
 					Expect(25);
@@ -440,8 +440,8 @@ out type);
 out type);
 					if (type == obj.type)
 					  if (obj.level == 0)
-					     gen.StoreGlobal(reg, obj.adr, name);
-					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					     gen.StoreGlobal(reg, obj.adr + index, name);
+					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
 					else SemErr("incompatible types");
 					
 				} else if (la.kind == 24) {
@@ -472,13 +472,13 @@ out type);
 					}
 					
 					if (arrayObj.level == 0)
-					  gen.StoreGlobal(reg, arrayObj.adr + rowIndex*columnIndex, name);
-					else gen.StoreLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, name);
+					  gen.LoadGlobal(reg, arrayObj.adr + rowIndex*columnIndex, arrayName);
+					else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex*columnIndex, arrayName);
 					
 					if (obj.level == 0)
-					  gen.LoadGlobal(reg, obj.adr, name);
+					  gen.StoreGlobal(reg, obj.adr + index , name);
 					else
-					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index, name);
 					
 				} else SynErr(45);
 				Expect(27);

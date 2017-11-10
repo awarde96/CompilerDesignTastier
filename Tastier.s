@@ -15,7 +15,7 @@ SubtractBody
     LDR     PC, [TOP]       ; return from Subtract
 Subtract
     LDR     R0, =2          ; current lexic level
-    LDR     R1, =1          ; number of local variables
+    LDR     R1, =2          ; number of local variables
     BL      enter           ; build new stack frame
     B       SubtractBody
    ;Name: aa, Type: integer, Kind: const, Sort: scalar
@@ -67,7 +67,7 @@ Add
     B       AddBody
 ; Procedure SumUp
 SumUpBody
- LDR R2, =0
+ LDR R2, =1
  ADD R2, R4, R2, LSL #2
  LDR R5, [R2] ; xy
     ADD     R2, BP, #16
@@ -89,25 +89,25 @@ SumUpBody
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
  LDR R5, [R2] ; i
- LDR R2, =2
+ LDR R2, =4
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; zzz
     LDR     R5, =2
- LDR R2, =1
+ LDR R2, =3
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; xyz
- LDR R2, =5
+ LDR R2, =6
  ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; i
+ LDR R0, [R2] ; zzz
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- LDR R0, [R2] ; i
- LDR R2, =5
- ADD R2, R4, R2, LSL #2
  STR R0, [R2] ; i
+ LDR R2, =6
+ ADD R2, R4, R2, LSL #2
+ LDR R0, [R2] ; xyz
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- LDR R0, [R2] ; i
+ STR R0, [R2] ; i
     ADD     R0, PC, #4      ; store return address
     STR     R0, [TOP]       ; in new stack frame
     B       Add

@@ -158,12 +158,12 @@ public class SymbolTable {
       }
       if (last == null)
          topScope.locals = obj; else last.next = obj;
-      if (kind == var)
+      if (kind == var || kind == constant)
          obj.adr = topScope.nextAdr++;
 
       //allocating address space for an array
       if (obj.sort == array){
-        obj.nextAdr += (obj.rows*obj.columns) + 1;
+        obj.nextAdr += (obj.rows*obj.columns);
       }
       return obj;
    }
