@@ -11,6 +11,7 @@ public class Obj { // properties of declared symbol
    public int columns; //number of columns
    public int level;   // lexic level: 0 = global; >= 1 local
    public int adr;     // address (displacement) in scope
+   public bool hasValue;
    public Obj next;    // ptr to next object in scope
    // for scopes
    public Obj outer;   // ptr to enclosing scope
@@ -110,7 +111,7 @@ public class SymbolTable {
           sortName = "array";
         }
 
-        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}",temp.name, typeName, kindName, sortName);
+        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}",temp.name, typeName, kindName, sortName, temp.nextAdr);
 
         if (sort == 2){
           Console.WriteLine("   ;Rows: {0}, Columns: {1}", temp.rows, temp.columns);
@@ -143,12 +144,13 @@ public class SymbolTable {
    }
 
 // create new object node in current scope
-   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns) {
+   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns, bool hasValue ) {
       Obj p, last;
       Obj obj = new Obj();
       obj.name = name; obj.kind = kind; obj.sort = sort;
       obj.rows = rows; obj.columns = columns;
       obj.type = type; obj.level = curLevel;
+      obj.hasValue = hasValue;
       obj.next = null;
       p = topScope.locals; last = null;
       while (p != null) {
@@ -163,6 +165,7 @@ public class SymbolTable {
 
       //allocating address space for an array
       if (obj.sort == array){
+        topScope.nextAdr = topScope.nextAdr + (obj.rows*obj.columns);
         obj.nextAdr += (obj.rows*obj.columns);
       }
       else{

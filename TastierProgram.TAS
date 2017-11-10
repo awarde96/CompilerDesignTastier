@@ -3,12 +3,15 @@
 
 program Test {
    int i;
-   const int xy = 0;
-   const int cc = 2;
+   const int xy;
    array int zzz[3];
+   array int xyz[6];
 
    void main(){
+      xy = 3;
       zzz[0] := 8;
-      zzz[1] := 8;
+      zzz[1] := 9;
+      xyz[0] := 7;
+      i := [0]zzz;
    }
 }

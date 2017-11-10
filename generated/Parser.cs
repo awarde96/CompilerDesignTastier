@@ -304,7 +304,7 @@ out type);
 		Obj obj; string procName; 
 		Expect(15);
 		Ident(out procName);
-		obj = tab.NewObj(procName, proc, undef,1,0,0);
+		obj = tab.NewObj(procName, proc, undef,1,0,0, false);
 		if (procName == "main")
 		  if (tab.curLevel == 0)
 		     tab.mainPresent = true;
@@ -350,19 +350,11 @@ out type);
 	}
 
 	void ConstantDecl() {
-		int n; string name; int type; int reg;
-		reg = gen.GetRegister();
-		
+		string name; int type;
 		Expect(38);
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, constant, type,scalar,0,0); 
-		Expect(18);
-		Expect(1);
-		type = integer;
-		n = Convert.ToInt32(t.val);
-		gen.LoadConstant(reg, n);
-		
+		tab.NewObj(name, constant, type,scalar,0,0,false); 
 		Expect(27);
 	}
 
@@ -370,17 +362,17 @@ out type);
 		string name; int type; int sort = 1;
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, var, type, sort,0,0); 
+		tab.NewObj(name, var, type, sort,0,0,false); 
 		while (la.kind == 37) {
 			Get();
 			Ident(out name);
-			tab.NewObj(name, var, type, sort,0,0); 
+			tab.NewObj(name, var, type, sort,0,0,false); 
 		}
 		Expect(27);
 	}
 
 	void ArrayDecl() {
-		int r; int c = 0; string name; int type; int sort = 2;
+		int r; int c = 0; string name; int type;
 		Expect(39);
 		Type(out type);
 		Ident(out name);
@@ -399,7 +391,7 @@ out type);
 			
 			Expect(25);
 		}
-		tab.NewObj(name, var, type,sort,r,c); 
+		tab.NewObj(name, var, type,array,r,c,false); 
 		Expect(27);
 	}
 
@@ -490,6 +482,24 @@ out type);
 				  gen.Call(name);
 				else SemErr("object is not a procedure");
 				
+			} else if (la.kind == 18) {
+				Get();
+				Expect(1);
+				if (obj.kind != constant)
+				  SemErr("Must be a constant to use '='");
+				
+				if(obj.hasValue == false){
+				  obj.hasValue = true;
+				}
+				else{
+				  SemErr("Constant already assigned");
+				}
+				
+				if (obj.level == 0)
+				  gen.StoreGlobal(reg, obj.adr, name);
+				else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+				
+				Expect(27);
 			} else SynErr(46);
 			break;
 		}
