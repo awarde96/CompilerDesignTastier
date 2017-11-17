@@ -36,7 +36,7 @@ public class Parser {
 	public const int _number = 1;
 	public const int _ident = 2;
 	public const int _string = 3;
-	public const int maxT = 40;
+	public const int maxT = 44;
 
 	const bool T = true;
 	const bool x = false;
@@ -129,7 +129,7 @@ const int // object kinds
 		} else if (la.kind == 5) {
 			Get();
 			op = Op.SUB; 
-		} else SynErr(41);
+		} else SynErr(45);
 	}
 
 	void Expr(out int reg,        // load value of Expr into register
@@ -199,7 +199,7 @@ out typeR);
 			op = Op.GEQ; 
 			break;
 		}
-		default: SynErr(42); break;
+		default: SynErr(46); break;
 		}
 	}
 
@@ -265,7 +265,7 @@ out type);
 			Expect(9);
 			break;
 		}
-		default: SynErr(43); break;
+		default: SynErr(47); break;
 		}
 	}
 
@@ -297,7 +297,7 @@ out type);
 				Get();
 			}
 			op = Op.MOD; 
-		} else SynErr(44);
+		} else SynErr(48);
 	}
 
 	void ProcDecl(string progName) {
@@ -315,9 +315,9 @@ out type);
 		Expect(9);
 		Expect(16);
 		while (StartOf(2)) {
-			if (la.kind == 38) {
+			if (la.kind == 42) {
 				ConstantDecl();
-			} else if (la.kind == 35 || la.kind == 36) {
+			} else if (la.kind == 39 || la.kind == 40) {
 				VarDecl();
 			} else {
 				ArrayDecl();
@@ -351,7 +351,7 @@ out type);
 
 	void ConstantDecl() {
 		string name; int type;
-		Expect(38);
+		Expect(42);
 		Type(out type);
 		Ident(out name);
 		tab.NewObj(name, constant, type,scalar,0,0,false); 
@@ -363,7 +363,7 @@ out type);
 		Type(out type);
 		Ident(out name);
 		tab.NewObj(name, var, type, sort,0,0,false); 
-		while (la.kind == 37) {
+		while (la.kind == 41) {
 			Get();
 			Ident(out name);
 			tab.NewObj(name, var, type, sort,0,0,false); 
@@ -373,7 +373,7 @@ out type);
 
 	void ArrayDecl() {
 		int r; int c = 0; string name; int type;
-		Expect(39);
+		Expect(43);
 		Type(out type);
 		Ident(out name);
 		Expect(24);
@@ -472,7 +472,7 @@ out type);
 					else
 					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
 					
-				} else SynErr(45);
+				} else SynErr(49);
 				Expect(27);
 			} else if (la.kind == 8) {
 				Get();
@@ -500,10 +500,34 @@ out type);
 				else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
 				
 				Expect(27);
-			} else SynErr(46);
+			} else SynErr(50);
 			break;
 		}
 		case 28: {
+			Get();
+			
+			Expect(8);
+			Expr(out reg,
+out type);
+			
+			Expect(9);
+			Expect(29);
+			while (la.kind == 30) {
+				Get();
+				Expect(8);
+				Expr(out reg,
+out type);
+				
+				Expect(9);
+				Stat();
+				
+			}
+			Expect(31);
+			Stat();
+			
+			break;
+		}
+		case 32: {
 			Get();
 			int l1, l2; l1 = 0; 
 			Expr(out reg,
@@ -519,14 +543,14 @@ out type);
 			gen.Branch(l2);
 			gen.Label(l1);
 			
-			if (la.kind == 29) {
+			if (la.kind == 33) {
 				Get();
 				Stat();
 			}
 			gen.Label(l2); 
 			break;
 		}
-		case 30: {
+		case 34: {
 			Get();
 			int l1, l2;
 			l1 = gen.NewLabel();
@@ -546,7 +570,7 @@ out type);
 			
 			break;
 		}
-		case 31: {
+		case 35: {
 			Get();
 			Ident(out name);
 			Expect(27);
@@ -561,7 +585,7 @@ out type);
 			
 			break;
 		}
-		case 32: {
+		case 36: {
 			Get();
 			string text; 
 			if (StartOf(4)) {
@@ -577,11 +601,11 @@ out type);
 			} else if (la.kind == 3) {
 				String(out text);
 				gen.WriteString(text); 
-			} else SynErr(47);
+			} else SynErr(51);
 			Expect(27);
 			break;
 		}
-		case 33: {
+		case 37: {
 			Get();
 			Expr(out reg,
 out type);
@@ -598,8 +622,8 @@ out type);
 		case 16: {
 			Get();
 			tab.OpenSubScope(); 
-			while (la.kind == 35 || la.kind == 36 || la.kind == 38) {
-				if (la.kind == 35 || la.kind == 36) {
+			while (la.kind == 39 || la.kind == 40 || la.kind == 42) {
+				if (la.kind == 39 || la.kind == 40) {
 					VarDecl();
 				} else {
 					ConstantDecl();
@@ -613,7 +637,7 @@ out type);
 			tab.CloseSubScope(); 
 			break;
 		}
-		default: SynErr(48); break;
+		default: SynErr(52); break;
 		}
 	}
 
@@ -635,14 +659,14 @@ out typeR);
 
 	void Tastier() {
 		string progName; 
-		Expect(34);
+		Expect(38);
 		Ident(out progName);
 		tab.OpenScope(); 
 		Expect(16);
 		while (StartOf(2)) {
-			if (la.kind == 35 || la.kind == 36) {
+			if (la.kind == 39 || la.kind == 40) {
 				VarDecl();
-			} else if (la.kind == 38) {
+			} else if (la.kind == 42) {
 				ConstantDecl();
 			} else {
 				ArrayDecl();
@@ -657,13 +681,13 @@ out typeR);
 
 	void Type(out int type) {
 		type = undef; 
-		if (la.kind == 35) {
+		if (la.kind == 39) {
 			Get();
 			type = integer; 
-		} else if (la.kind == 36) {
+		} else if (la.kind == 40) {
 			Get();
 			type = boolean; 
-		} else SynErr(49);
+		} else SynErr(53);
 	}
 
 
@@ -678,12 +702,12 @@ out typeR);
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,T, x,x},
-		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, T,x,T,T, T,T,x,x, x,x,x,x, x,x},
-		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
-		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,T, x,x},
+		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, T,x,T,T, T,T,x,x, x,x,x,x, x,x},
+		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x}
 
 	};
 } // end Parser
@@ -725,28 +749,32 @@ public class Errors {
 			case 25: s = "\"]\" expected"; break;
 			case 26: s = "\":=\" expected"; break;
 			case 27: s = "\";\" expected"; break;
-			case 28: s = "\"if\" expected"; break;
-			case 29: s = "\"else\" expected"; break;
-			case 30: s = "\"while\" expected"; break;
-			case 31: s = "\"read\" expected"; break;
-			case 32: s = "\"write\" expected"; break;
-			case 33: s = "\"writeln\" expected"; break;
-			case 34: s = "\"program\" expected"; break;
-			case 35: s = "\"int\" expected"; break;
-			case 36: s = "\"bool\" expected"; break;
-			case 37: s = "\",\" expected"; break;
-			case 38: s = "\"const\" expected"; break;
-			case 39: s = "\"array\" expected"; break;
-			case 40: s = "??? expected"; break;
-			case 41: s = "invalid AddOp"; break;
-			case 42: s = "invalid RelOp"; break;
-			case 43: s = "invalid Primary"; break;
-			case 44: s = "invalid MulOp"; break;
-			case 45: s = "invalid Stat"; break;
-			case 46: s = "invalid Stat"; break;
-			case 47: s = "invalid Stat"; break;
-			case 48: s = "invalid Stat"; break;
-			case 49: s = "invalid Type"; break;
+			case 28: s = "\"switch\" expected"; break;
+			case 29: s = "\":\" expected"; break;
+			case 30: s = "\"case\" expected"; break;
+			case 31: s = "\"default\" expected"; break;
+			case 32: s = "\"if\" expected"; break;
+			case 33: s = "\"else\" expected"; break;
+			case 34: s = "\"while\" expected"; break;
+			case 35: s = "\"read\" expected"; break;
+			case 36: s = "\"write\" expected"; break;
+			case 37: s = "\"writeln\" expected"; break;
+			case 38: s = "\"program\" expected"; break;
+			case 39: s = "\"int\" expected"; break;
+			case 40: s = "\"bool\" expected"; break;
+			case 41: s = "\",\" expected"; break;
+			case 42: s = "\"const\" expected"; break;
+			case 43: s = "\"array\" expected"; break;
+			case 44: s = "??? expected"; break;
+			case 45: s = "invalid AddOp"; break;
+			case 46: s = "invalid RelOp"; break;
+			case 47: s = "invalid Primary"; break;
+			case 48: s = "invalid MulOp"; break;
+			case 49: s = "invalid Stat"; break;
+			case 50: s = "invalid Stat"; break;
+			case 51: s = "invalid Stat"; break;
+			case 52: s = "invalid Stat"; break;
+			case 53: s = "invalid Type"; break;
 
 			default: s = "error " + n; break;
 		}
