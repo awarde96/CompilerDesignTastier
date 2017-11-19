@@ -516,10 +516,15 @@ out type1);
 			while (la.kind == 30) {
 				Get();
 				l2 = gen.NewLabel();
+				gen.GetRegister();
 				
 				Expect(8);
 				Expr(out reg2,
 out type2);
+				if (type1 != type2){
+				 SemErr("Types in case must match switch statement");
+				}
+				gen.RelOp(Op.EQU,reg1,reg2);
 				gen.BranchFalse(l2);
 				
 				Expect(9);

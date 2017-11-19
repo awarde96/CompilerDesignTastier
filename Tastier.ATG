@@ -326,10 +326,15 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
   {
     "case"              (.
                           l2 = gen.NewLabel();
+                          gen.GetRegister();
                         .)
     "("
     Expr<out reg2,
-         out type2>      (.
+         out type2>     (.
+                            if (type1 != type2){
+                              SemErr("Types in case must match switch statement");
+                            }
+                            gen.RelOp(Op.EQU,reg1,reg2);
                             gen.BranchFalse(l2);
                         .)
     ")"

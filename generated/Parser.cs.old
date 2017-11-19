@@ -520,6 +520,10 @@ out type1);
 				Expect(8);
 				Expr(out reg2,
 out type2);
+				if (type1 != type2){
+				 SemErr("Types in case must match switch statement");
+				}
+				gen.RelOp(Op.EQU,reg1,reg2);
 				gen.BranchFalse(l2);
 				
 				Expect(9);
