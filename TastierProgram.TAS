@@ -3,23 +3,14 @@
 
 program Test {
    int i;
-   const int xy;
-   array int zzz[3];
-   array int xyz[6];
-   array int yyy[4][4];
+
 
    void main(){
-      xy = 3;
-      zzz[0] := 8;
-      zzz[1] := 9;
-      xyz[0] := 7;
-      yyy[0][0] := 6;
-      yyy[2][2] := 12;
-      i := [0]zzz;
 
-      switch(xy):
-        case(i)
-          i := xy;
+
+      switch(i):
+        case(1)
+          i := 1;
         case(2)
           i := 2;
         default

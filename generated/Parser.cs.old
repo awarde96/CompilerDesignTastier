@@ -505,23 +505,34 @@ out type);
 		}
 		case 28: {
 			Get();
-			
+			int l1, l2, l3; int reg1, reg2; int type1, type2;
 			Expect(8);
-			Expr(out reg,
-out type);
+			Expr(out reg1,
+out type1);
+			l3 = 0;
 			
 			Expect(9);
 			Expect(29);
 			while (la.kind == 30) {
 				Get();
+				l2 = gen.NewLabel();
+				
 				Expect(8);
-				Stat();
+				Expr(out reg2,
+out type2);
+				gen.BranchFalse(l2);
 				
 				Expect(9);
 				Stat();
+				l3 = gen.NewLabel();
+				gen.Branch(l3);
+				
+				gen.Label(l2);
 				
 			}
 			Expect(31);
+			gen.Label(l3);
+			
 			Stat();
 			
 			break;
