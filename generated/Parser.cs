@@ -536,9 +536,9 @@ out type2);
 				
 			}
 			Expect(31);
-			gen.Label(l3);
-			
 			Stat();
+			
+			gen.Label(l3);
 			
 			break;
 		}

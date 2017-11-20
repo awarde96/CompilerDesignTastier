@@ -207,20 +207,20 @@ public class CodeGenerator {
 
 // method to generate ARM assembly laguage code to load global variable's address
    public void LoadGlobalAddress(int address) {
-      Console.WriteLine(" LDR R2, ={0}", address);
+      Console.WriteLine("    LDR R2, ={0}", address);
    // R4 holds base address for globals, scalar variables are four bytes long
-      Console.WriteLine(" ADD R2, R4, R2, LSL #2");
+      Console.WriteLine("    ADD R2, R4, R2, LSL #2");
    }
 
 // method to generate ARM assembly laguage code to load global variable's value
    public void LoadGlobalValue(int register, string name) {
    // R4 holds base address for globals, scalar variables are four bytes long
-      Console.WriteLine(" LDR R{0}, [R2] ; {1}", register, name);
+      Console.WriteLine("    LDR R{0}, [R2] ; {1}", register, name);
    }
 
 // method to generate ARM assembly laguage code to store global variable's value
    public void StoreGlobalValue(int register, string name) {
-      Console.WriteLine(" STR R{0}, [R2] ; {1}", register, name);
+      Console.WriteLine("    STR R{0}, [R2] ; {1}", register, name);
    }
 
 // method to generate ARM assembly laguage code to load global variable
@@ -300,7 +300,7 @@ public class CodeGenerator {
          Console.WriteLine("    SUB     R{0}, R{0}, R{1}", leftOp, rightOp);
    }
 
-// method to generate ARM assembly language code for 
+// method to generate ARM assembly language code for
    public void MulOp(Op op, int leftOp, int rightOp) {
       switch (op) {
          case Op.MUL: // note: ordering of operands in generated instruction

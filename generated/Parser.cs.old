@@ -516,6 +516,7 @@ out type1);
 			while (la.kind == 30) {
 				Get();
 				l2 = gen.NewLabel();
+				gen.GetRegister();
 				
 				Expect(8);
 				Expr(out reg2,
@@ -535,9 +536,9 @@ out type2);
 				
 			}
 			Expect(31);
-			gen.Label(l3);
-			
 			Stat();
+			
+			gen.Label(l3);
 			
 			break;
 		}

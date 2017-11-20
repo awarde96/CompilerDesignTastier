@@ -28,42 +28,46 @@ main
 	LDR 	TOP, =stack+16	; address of top of stack frame
 	B		Main
 MainBody
- LDR R2, =2
- ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; xy
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    STR R0, [R2] ; xy
     MOVS    R5, #1          ; true
- LDR R2, =1
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; j
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; j
     LDR     R5, =8
- LDR R2, =3
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; zzz
+    LDR R2, =3
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; zzz
     LDR     R5, =9
- LDR R2, =4
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; zzz
+    LDR R2, =4
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; zzz
     LDR     R5, =7
- LDR R2, =7
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; xyz
+    LDR R2, =7
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; xyz
     LDR     R5, =6
- LDR R2, =14
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; yyy
+    LDR R2, =14
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; yyy
     LDR     R5, =12
- LDR R2, =24
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; yyy
- LDR R2, =3
- ADD R2, R4, R2, LSL #2
- LDR R0, [R2] ; zzz
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; i
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
+    LDR R2, =24
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; yyy
+    LDR R2, =3
+    ADD R2, R4, R2, LSL #2
+    LDR R0, [R2] ; zzz
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R0, [R2] ; i
+    LDR     R5, =2
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
     LDR     R6, =1
     CMP     R5, R6
     MOVEQ   R5, #1
@@ -71,9 +75,9 @@ MainBody
     MOVS    R5, R5          ; reset Z flag in CPSR
     BEQ     L1              ; jump on condition false
     LDR     R5, =1
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; i
     B       L2
 L1
     LDR     R6, =2
@@ -83,16 +87,21 @@ L1
     MOVS    R5, R5          ; reset Z flag in CPSR
     BEQ     L3              ; jump on condition false
     LDR     R5, =2
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; i
     B       L4
 L3
-L4
     LDR     R5, =10
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; i
+L4
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintInt
 StopTest
     B       StopTest
 Main

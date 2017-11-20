@@ -18,6 +18,7 @@ program Test {
       yyy[0][0] := 6;
       yyy[2][2] := 12;
       i := [0]zzz;
+      i := 2;
 
       switch(i):
         case(1)
@@ -27,5 +28,6 @@ program Test {
         default
           i := 10;
 
+      write i;
    }
 }
