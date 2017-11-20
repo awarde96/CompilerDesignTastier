@@ -512,6 +512,7 @@ out type);
 			Expr(out reg1,
 out type1);
 			l3 = 0;
+			l3 = gen.NewLabel();
 			
 			Expect(9);
 			Expect(29);
@@ -526,12 +527,11 @@ out type2);
 				if (type1 != type2){
 				 SemErr("Types in case must match switch statement");
 				}
-				gen.RelOp(Op.EQU,reg1,reg2);
+				gen.RelOp(Op.EQU,reg2,reg1);
 				gen.BranchFalse(l2);
 				
 				Expect(9);
 				Stat();
-				l3 = gen.NewLabel();
 				gen.Branch(l3);
 				
 				gen.Label(l2);

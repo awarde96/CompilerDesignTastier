@@ -27,6 +27,8 @@ program Test {
       switch(i):
         case(1)
           j := 1;
+        case(2)
+          j := 2;
         default
           j := 10;
 
