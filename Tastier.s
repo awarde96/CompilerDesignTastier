@@ -1,15 +1,28 @@
 MainBody
+    LDR     R5, =3
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
-    STR R0, [R2] ; xy
-    MOVS    R5, #1          ; true
-    LDR R2, =1
+    STR R5, [R2] ; xy
+    LDR R2, =2
     ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; j
+    LDR R5, [R2] ; xy
+    MOV     R0, R5
+    BL      TastierPrintInt
     LDR     R5, =8
     LDR R2, =3
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
+    LDR R2, =3
+    ADD R2, R4, R2, LSL #2
+    LDR R0, [R2] ; zzz
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R0, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintInt
     LDR     R5, =9
     LDR R2, =4
     ADD R2, R4, R2, LSL #2
@@ -26,12 +39,17 @@ MainBody
     LDR R2, =24
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; yyy
-    LDR R2, =3
+    LDR R2, =24
     ADD R2, R4, R2, LSL #2
-    LDR R0, [R2] ; zzz
+    LDR R0, [R2] ; yyy
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     STR R0, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintInt
     LDR     R5, =2
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
@@ -46,31 +64,19 @@ MainBody
     MOVS    R5, R5          ; reset Z flag in CPSR
     BEQ     L1              ; jump on condition false
     LDR     R5, =1
-    LDR R2, =0
+    LDR R2, =1
     ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; i
+    STR R5, [R2] ; j
     B       L2
 L1
-    LDR     R6, =2
-    CMP     R5, R6
-    MOVEQ   R5, #1
-    MOVNE   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L3              ; jump on condition false
-    LDR     R5, =2
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; i
-    B       L4
-L3
     LDR     R5, =10
-    LDR R2, =0
+    LDR R2, =1
     ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; i
-L4
-    LDR R2, =0
+    STR R5, [R2] ; j
+L2
+    LDR R2, =1
     ADD R2, R4, R2, LSL #2
-    LDR R5, [R2] ; i
+    LDR R5, [R2] ; j
     MOV     R0, R5
     BL      TastierPrintInt
 StopTest
@@ -81,7 +87,7 @@ Main
     BL      enter           ; build new stack frame
     B       MainBody
    ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 0
-   ;Name: j, Type: boolean, Kind: var, Sort: scalar, address: 1
+   ;Name: j, Type: integer, Kind: var, Sort: scalar, address: 1
    ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 2
    ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 3
    ;Rows: 3, Columns: 1

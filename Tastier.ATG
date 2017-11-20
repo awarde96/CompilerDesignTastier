@@ -218,7 +218,7 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName; .)
+Stat                     (. int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
@@ -297,7 +297,9 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                             else SemErr("object is not a procedure");
                          .)
   | "="
-    number              (.
+    Expr<out reg,
+         out type>(.
+
                              if (obj.kind != constant)
                                 SemErr("Must be a constant to use '='");
 
@@ -310,7 +312,8 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
 
                              if (obj.level == 0)
                                 gen.StoreGlobal(reg, obj.adr, name);
-                             else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+                             else
+                                gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
                        .)
     ';'
   )

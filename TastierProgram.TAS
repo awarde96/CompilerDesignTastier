@@ -3,7 +3,7 @@
 
 program Test {
    int i;
-   bool j;
+   int j;
    const int xy;
    array int zzz[3];
    array int xyz[6];
@@ -11,23 +11,25 @@ program Test {
 
    void main(){
       xy = 3;
-      j := true;
+      write xy;
       zzz[0] := 8;
+      i := [0]zzz;
+      write i;
       zzz[1] := 9;
       xyz[0] := 7;
       yyy[0][0] := 6;
       yyy[2][2] := 12;
-      i := [0]zzz;
+      i := [2][2]yyy;
+      write i;
       i := 2;
+
 
       switch(i):
         case(1)
-          i := 1;
-        case(2)
-          i := 2;
+          j := 1;
         default
-          i := 10;
+          j := 10;
 
-      write i;
+      write j;
    }
 }

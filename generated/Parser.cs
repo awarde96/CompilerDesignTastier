@@ -396,7 +396,7 @@ out type);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName; 
+		int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName;
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
@@ -484,7 +484,8 @@ out type);
 				
 			} else if (la.kind == 18) {
 				Get();
-				Expect(1);
+				Expr(out reg,
+out type);
 				if (obj.kind != constant)
 				  SemErr("Must be a constant to use '='");
 				
@@ -497,7 +498,8 @@ out type);
 				
 				if (obj.level == 0)
 				  gen.StoreGlobal(reg, obj.adr, name);
-				else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+				else
+				  gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
 				
 				Expect(27);
 			} else SynErr(50);
