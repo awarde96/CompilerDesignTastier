@@ -21,14 +21,20 @@ program Test {
       yyy[2][2] := 12;
       i := [2][2]yyy;
       write i;
-      i := 2;
-
+      writeln i;
+      i := 4;
 
       switch(i):
         case(1)
           j := 1;
         case(2)
           j := 2;
+          break
+        case(3)
+          j := 3;
+        case(4)
+          j := 4;
+          break
         default
           j := 10;
 

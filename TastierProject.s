@@ -79,7 +79,12 @@ MainBody
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintInt
-    LDR     R5, =2
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintIntLf
+    LDR     R5, =4
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; i
@@ -96,7 +101,6 @@ MainBody
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L1
 L2
     LDR     R6, =2
     CMP     R6, R5
@@ -110,6 +114,29 @@ L2
     STR R5, [R2] ; j
     B       L1
 L3
+    LDR     R6, =3
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L4              ; jump on condition false
+    LDR     R5, =3
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; j
+L4
+    LDR     R6, =4
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L5              ; jump on condition false
+    LDR     R5, =4
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; j
+    B       L1
+L5
     LDR     R5, =10
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
