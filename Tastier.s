@@ -68,7 +68,7 @@ L3
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR     R5, =3
+    LDR     R5, =2
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; i
@@ -96,14 +96,8 @@ L5
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L4
 L6
     LDR     R6, =3
-    CMP     R6, R5
-    MOVEQ   R6, #1
-    MOVNE   R6, #0
-    MOVS    R6, R6          ; reset Z flag in CPSR
-    BEQ     L7              ; jump on condition false
     LDR     R5, =3
     LDR R2, =1
     ADD R2, R4, R2, LSL #2

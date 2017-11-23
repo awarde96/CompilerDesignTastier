@@ -1,5 +1,5 @@
-// program to read integer values n (n > 0) from the console
-// and, for each one, print the sum of the values from 1 to n
+// A program to to show the use of constants, arrays
+// and switch statements
 
 program Test {
    int i;
@@ -24,17 +24,16 @@ program Test {
       i := [2][2]yyy;
       write "[2][2]yyy = ";
       writeln i;
-      i := 3;
+      i := 2;
 
       switch(i):
         case(1)
           j := 1;
         case(2)
           j := 2;
-          break
+          continue
         case(3)
           j := 3;
-          continue
         case(4)
           j := 4;
           break
