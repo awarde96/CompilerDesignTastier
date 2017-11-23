@@ -229,8 +229,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 45;
-	const int noSym = 45;
+	const int maxT = 46;
+	const int noSym = 46;
 
 
 	public Buffer buffer; // scanner buffer
@@ -393,19 +393,20 @@ public class Scanner {
 			case "void": t.kind = 15; break;
 			case "switch": t.kind = 28; break;
 			case "case": t.kind = 30; break;
-			case "break": t.kind = 31; break;
-			case "default": t.kind = 32; break;
-			case "if": t.kind = 33; break;
-			case "else": t.kind = 34; break;
-			case "while": t.kind = 35; break;
-			case "read": t.kind = 36; break;
-			case "write": t.kind = 37; break;
-			case "writeln": t.kind = 38; break;
-			case "program": t.kind = 39; break;
-			case "int": t.kind = 40; break;
-			case "bool": t.kind = 41; break;
-			case "const": t.kind = 43; break;
-			case "array": t.kind = 44; break;
+			case "continue": t.kind = 31; break;
+			case "break": t.kind = 32; break;
+			case "default": t.kind = 33; break;
+			case "if": t.kind = 34; break;
+			case "else": t.kind = 35; break;
+			case "while": t.kind = 36; break;
+			case "read": t.kind = 37; break;
+			case "write": t.kind = 38; break;
+			case "writeln": t.kind = 39; break;
+			case "program": t.kind = 40; break;
+			case "int": t.kind = 41; break;
+			case "bool": t.kind = 42; break;
+			case "const": t.kind = 44; break;
+			case "array": t.kind = 45; break;
 			default: break;
 		}
 	}
@@ -485,7 +486,7 @@ public class Scanner {
 			case 21:
 				{t.kind = 27; break;}
 			case 22:
-				{t.kind = 42; break;}
+				{t.kind = 43; break;}
 			case 23:
 				recEnd = pos; recKind = 19;
 				if (ch == '=') {AddCh(); goto case 16;}

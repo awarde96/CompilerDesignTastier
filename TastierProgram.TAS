@@ -11,18 +11,20 @@ program Test {
 
    void main(){
       xy = 3;
-      write xy;
+      write "Constant xy = ";
+      writeln xy;
       zzz[0] := 8;
       i := [0]zzz;
-      write i;
+      write "[0]zzz = ";
+      writeln i;
       zzz[1] := 9;
       xyz[0] := 7;
       yyy[0][0] := 6;
       yyy[2][2] := 12;
       i := [2][2]yyy;
-      write i;
+      write "[2][2]yyy = ";
       writeln i;
-      i := 4;
+      i := 3;
 
       switch(i):
         case(1)
@@ -32,12 +34,14 @@ program Test {
           break
         case(3)
           j := 3;
+          continue
         case(4)
           j := 4;
           break
         default
           j := 10;
 
-      write j;
+      write "j = ";
+      writeln j;
    }
 }
