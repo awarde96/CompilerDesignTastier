@@ -318,7 +318,7 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
     ';'
   )
 
-| "switch"              (. int l1, l2, l3; int reg1, reg2; int type1, type2; int check = 0; .)
+| "switch"              (. int l1, l2, l3; int reg1, reg2; int type1, type2; int check = 0; int errorCheck; .)
   "("
     Expr<out reg1,
          out type1>      (.
@@ -331,6 +331,7 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
     "case"              (.
                           l2 = gen.NewLabel();
                           gen.GetRegister();
+                          errorCheck = 0;
                         .)
     "("
     Expr<out reg2,
@@ -348,12 +349,21 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
 
                         .)
     [
-      "continue"        (. check = 1;.)
+      "continue"        (.
+                          check = 1;
+                          errorCheck += 1;
+                        .)
     ]
     [
-      "break"           (. gen.Branch(l3); .)
+      "break"           (.
+                          gen.Branch(l3);
+                          errorCheck += 1;
+                        .)
     ]
                         (.
+                          if(errorCheck != 1){
+                            SemErr("Must use either a continue or break in switch statement");
+                          }
                           gen.Label(l2);
                         .)
   }

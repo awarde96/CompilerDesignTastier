@@ -29,11 +29,13 @@ program Test {
       switch(i):
         case(1)
           j := 1;
+          continue
         case(2)
           j := 2;
           continue
         case(3)
           j := 3;
+          break
         case(4)
           j := 4;
           break

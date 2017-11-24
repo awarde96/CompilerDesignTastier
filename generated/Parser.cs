@@ -507,7 +507,7 @@ out type);
 		}
 		case 28: {
 			Get();
-			int l1, l2, l3; int reg1, reg2; int type1, type2; int check = 0; 
+			int l1, l2, l3; int reg1, reg2; int type1, type2; int check = 0; int errorCheck; 
 			Expect(8);
 			Expr(out reg1,
 out type1);
@@ -520,6 +520,7 @@ out type1);
 				Get();
 				l2 = gen.NewLabel();
 				gen.GetRegister();
+				errorCheck = 0;
 				
 				Expect(8);
 				Expr(out reg2,
@@ -538,10 +539,17 @@ out type2);
 				if (la.kind == 31) {
 					Get();
 					check = 1;
+					errorCheck += 1;
+					
 				}
 				if (la.kind == 32) {
 					Get();
-					gen.Branch(l3); 
+					gen.Branch(l3);
+					errorCheck += 1;
+					
+				}
+				if(errorCheck != 1){
+				 SemErr("Must use either a continue or break in switch statement");
 				}
 				gen.Label(l2);
 				

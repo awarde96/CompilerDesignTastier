@@ -116,11 +116,6 @@ L3
     STR R5, [R2] ; j
 L5
     LDR     R6, =2
-    CMP     R6, R5
-    MOVEQ   R6, #1
-    MOVNE   R6, #0
-    MOVS    R6, R6          ; reset Z flag in CPSR
-    BEQ     L6              ; jump on condition false
     LDR     R5, =2
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
@@ -131,6 +126,7 @@ L6
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
+    B       L4
 L7
     LDR     R6, =4
     LDR     R5, =4
