@@ -4,6 +4,7 @@
 program Test {
    int i;
    int j;
+   int n;
    const int xy;
    array int zzz[3];
    array int xyz[6];
@@ -44,5 +45,8 @@ program Test {
 
       write "j = ";
       writeln j;
+
+      for(n := 0; n < 3; n := n + 1;)
+        j := 3;
    }
 }

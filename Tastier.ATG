@@ -375,6 +375,37 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                           gen.Label(l3);
                         .)
 
+| "for"                  (.
+                           int l1, l2;
+                           l1 = 0;
+                           l2 = 0;
+                         .)
+  '('
+  Stat                  (.
+                          l1 = gen.NewLabel();
+                          gen.Label(l1);
+                        .)
+
+  Expr<out reg,
+       out type>        (.
+                            if (type == boolean) {
+                               l2 = gen.NewLabel();
+                               gen.BranchFalse(l2);
+                            }
+                            else SemErr("boolean type expected");
+                        .)
+ ';'
+
+ Stat                   (..)
+ ')'
+
+ Stat                   (.
+                          gen.Branch(l1);
+                          gen.Label(l2);
+                        .)
+
+
+
 
 | "if"                   (. int l1, l2; l1 = 0; .)
   Expr<out reg,

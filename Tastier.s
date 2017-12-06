@@ -1,6 +1,6 @@
 MainBody
     LDR     R5, =3
-    LDR R2, =2
+    LDR R2, =3
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xy
     ADD     R0, PC, #4      ; string address
@@ -9,16 +9,16 @@ MainBody
     DCB     "Constant xy = ", 0
     ALIGN
 L1
-    LDR R2, =2
+    LDR R2, =3
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; xy
     MOV     R0, R5
     BL      TastierPrintIntLf
     LDR     R5, =8
-    LDR R2, =3
+    LDR R2, =4
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
-    LDR R2, =3
+    LDR R2, =4
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; zzz
     LDR R2, =0
@@ -36,22 +36,22 @@ L2
     MOV     R0, R5
     BL      TastierPrintIntLf
     LDR     R5, =9
-    LDR R2, =4
+    LDR R2, =5
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
     LDR     R5, =7
-    LDR R2, =7
+    LDR R2, =8
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xyz
     LDR     R5, =6
-    LDR R2, =14
+    LDR R2, =15
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; yyy
     LDR     R5, =12
-    LDR R2, =24
+    LDR R2, =25
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; yyy
-    LDR R2, =24
+    LDR R2, =25
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; yyy
     LDR R2, =0
@@ -122,6 +122,34 @@ L9
     LDR R5, [R2] ; j
     MOV     R0, R5
     BL      TastierPrintIntLf
+    LDR     R5, =0
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; n
+L10
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; n
+    LDR     R6, =3
+    CMP     R5, R6
+    MOVLT   R5, #1
+    MOVGE   R5, #0
+    MOVS    R5, R5          ; reset Z flag in CPSR
+    BEQ     L11              ; jump on condition false
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; n
+    LDR     R6, =1
+    ADD     R5, R5, R6
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; n
+    LDR     R5, =3
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; j
+    B       L10
+L11
 StopTest
     B       StopTest
 Main
@@ -131,11 +159,12 @@ Main
     B       MainBody
    ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 0
    ;Name: j, Type: integer, Kind: var, Sort: scalar, address: 1
-   ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 2
-   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 3
+   ;Name: n, Type: integer, Kind: var, Sort: scalar, address: 2
+   ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 3
+   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 4
    ;Rows: 3, Columns: 1
-   ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 7
+   ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 8
    ;Rows: 6, Columns: 1
-   ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 14
+   ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 15
    ;Rows: 4, Columns: 4
    ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0
