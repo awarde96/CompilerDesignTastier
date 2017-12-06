@@ -376,9 +376,11 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                         .)
 
 | "for"                  (.
-                           int l1, l2;
+                           int l1, l2, l3, l4;
                            l1 = 0;
                            l2 = 0;
+                           l3 = 0;
+                           l4 = 0;
                          .)
   '('
   Stat                  (.
@@ -391,19 +393,28 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                             if (type == boolean) {
                                l2 = gen.NewLabel();
                                gen.BranchFalse(l2);
+                               l3 = gen.NewLabel();
+                               gen.Branch(l3);
                             }
                             else SemErr("boolean type expected");
                         .)
- ';'
-
- Stat                   (..)
- ')'
+ ';'                    (.
+                          l4 = gen.NewLabel();
+                          gen.Label(l4);
+                        .)
 
  Stat                   (.
                           gen.Branch(l1);
+                          gen.Label(l3);
+                        .)
+ ')'
+ '{'
+
+ Stat                   (.
+                          gen.Branch(l4);
                           gen.Label(l2);
                         .)
-
+'}'
 
 
 

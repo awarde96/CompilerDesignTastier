@@ -46,7 +46,10 @@ program Test {
       write "j = ";
       writeln j;
 
-      for(n := 0; n < 3; n := n + 1;)
-        j := 3;
+      for(n := 0; n < 3; n := n + 1;){
+        j := j + 3;
+      }
+      writeln n;
+      writeln j;
    }
 }

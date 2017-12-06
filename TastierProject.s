@@ -165,6 +165,8 @@ L10
     MOVGE   R5, #0
     MOVS    R5, R5          ; reset Z flag in CPSR
     BEQ     L11              ; jump on condition false
+    B       L12
+L13
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
@@ -173,12 +175,28 @@ L10
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; n
-    LDR     R5, =3
+    B       L10
+L12
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; j
+    LDR     R6, =3
+    ADD     R5, R5, R6
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L10
+    B       L13
 L11
+    LDR R2, =2
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; n
+    MOV     R0, R5
+    BL      TastierPrintIntLf
+    LDR R2, =1
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; j
+    MOV     R0, R5
+    BL      TastierPrintIntLf
 StopTest
     B       StopTest
 Main

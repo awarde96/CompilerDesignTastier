@@ -563,9 +563,11 @@ out type2);
 		}
 		case 34: {
 			Get();
-			int l1, l2;
+			int l1, l2, l3, l4;
 			l1 = 0;
 			l2 = 0;
+			l3 = 0;
+			l4 = 0;
 			
 			Expect(8);
 			Stat();
@@ -577,17 +579,26 @@ out type);
 			if (type == boolean) {
 			  l2 = gen.NewLabel();
 			  gen.BranchFalse(l2);
+			  gen.Branch(l3);
 			}
 			else SemErr("boolean type expected");
 			
 			Expect(27);
+			l4 = gen.NewLabel();
+			gen.Label(l4);
+			
 			Stat();
+			l3 = gen.NewLabel();
+			gen.Branch(l1);
+			gen.Label(l3);
 			
 			Expect(9);
+			Expect(16);
 			Stat();
-			gen.Branch(l1);
+			gen.Branch(l4);
 			gen.Label(l2);
 			
+			Expect(17);
 			break;
 		}
 		case 35: {
