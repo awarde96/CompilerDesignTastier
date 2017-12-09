@@ -25,7 +25,7 @@ public class SymbolTable {
       var = 0, proc = 1, scope = 2, constant = 3;
 
    const int // types
-      undef = 0, integer = 1, boolean = 2;
+      undef = 0, integer = 1, boolean = 2, structure = 3;
 
   const int // sort
       none = 0, scalar = 1, array = 2;
@@ -84,8 +84,11 @@ public class SymbolTable {
         else if(type ==1){
           typeName = "integer";
         }
-        else{
+        else if(type == 2){
           typeName = "boolean";
+        }
+        else{
+          typeName = "struct";
         }
 
         if(kind == 0){

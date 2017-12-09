@@ -506,7 +506,7 @@ Tastier                  (. string progName; .)
   = "program"
   Ident<out progName>    (. tab.OpenScope(); .)
   '{'
-    { VarDecl | ConstantDecl | ArrayDecl}          // global variables
+    { VarDecl | ConstantDecl | ArrayDecl | StructDecl}          // global variables
     { ProcDecl<progName> }
                          (. tab.CloseScope(); .)
   '}'
@@ -560,6 +560,17 @@ ConstantDecl                (. string name; int type;.)
 
 /*-------------------------------------------------------------------------------------------*/
 
+StructDecl               (. string name; int type; .)
+=
+  "struct"
+  Ident<out name>        (. tab.NewObj(name, var, 3, scalar, 0,0,false);.)
+  '{'
+    {
+      VarDecl
+    }
+  '}'
+.
+/*-------------------------------------------------------------------------------------------*/
 ArrayDecl                (. int r; int c = 0; string name; int type;.)
 =
   "array"

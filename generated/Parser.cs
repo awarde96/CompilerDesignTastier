@@ -36,7 +36,7 @@ public class Parser {
 	public const int _number = 1;
 	public const int _ident = 2;
 	public const int _string = 3;
-	public const int maxT = 47;
+	public const int maxT = 48;
 
 	const bool T = true;
 	const bool x = false;
@@ -129,7 +129,7 @@ const int // object kinds
 		} else if (la.kind == 5) {
 			Get();
 			op = Op.SUB; 
-		} else SynErr(48);
+		} else SynErr(49);
 	}
 
 	void Expr(out int reg,        // load value of Expr into register
@@ -199,7 +199,7 @@ out typeR);
 			op = Op.GEQ; 
 			break;
 		}
-		default: SynErr(49); break;
+		default: SynErr(50); break;
 		}
 	}
 
@@ -265,7 +265,7 @@ out type);
 			Expect(9);
 			break;
 		}
-		default: SynErr(50); break;
+		default: SynErr(51); break;
 		}
 	}
 
@@ -297,7 +297,7 @@ out type);
 				Get();
 			}
 			op = Op.MOD; 
-		} else SynErr(51);
+		} else SynErr(52);
 	}
 
 	void ProcDecl(string progName) {
@@ -373,7 +373,7 @@ out type);
 
 	void ArrayDecl() {
 		int r; int c = 0; string name; int type;
-		Expect(46);
+		Expect(47);
 		Type(out type);
 		Ident(out name);
 		Expect(24);
@@ -472,7 +472,7 @@ out type);
 					else
 					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
 					
-				} else SynErr(52);
+				} else SynErr(53);
 				Expect(27);
 			} else if (la.kind == 8) {
 				Get();
@@ -502,7 +502,7 @@ out type);
 				  gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
 				
 				Expect(27);
-			} else SynErr(53);
+			} else SynErr(54);
 			break;
 		}
 		case 28: {
@@ -675,7 +675,7 @@ out type);
 			} else if (la.kind == 3) {
 				String(out text);
 				gen.WriteString(text); 
-			} else SynErr(54);
+			} else SynErr(55);
 			Expect(27);
 			break;
 		}
@@ -711,7 +711,7 @@ out type);
 			tab.CloseSubScope(); 
 			break;
 		}
-		default: SynErr(55); break;
+		default: SynErr(56); break;
 		}
 	}
 
@@ -737,19 +737,33 @@ out typeR);
 		Ident(out progName);
 		tab.OpenScope(); 
 		Expect(16);
-		while (StartOf(2)) {
+		while (StartOf(6)) {
 			if (la.kind == 42 || la.kind == 43) {
 				VarDecl();
 			} else if (la.kind == 45) {
 				ConstantDecl();
-			} else {
+			} else if (la.kind == 47) {
 				ArrayDecl();
+			} else {
+				StructDecl();
 			}
 		}
 		while (la.kind == 15) {
 			ProcDecl(progName);
 		}
 		tab.CloseScope(); 
+		Expect(17);
+	}
+
+	void StructDecl() {
+		string name; int type; 
+		Expect(46);
+		Ident(out name);
+		tab.NewObj(name, var, 3, scalar, 0,0,false);
+		Expect(16);
+		while (la.kind == 42 || la.kind == 43) {
+			VarDecl();
+		}
 		Expect(17);
 	}
 
@@ -761,7 +775,7 @@ out typeR);
 		} else if (la.kind == 43) {
 			Get();
 			type = boolean; 
-		} else SynErr(56);
+		} else SynErr(57);
 	}
 
 
@@ -776,12 +790,13 @@ out typeR);
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,T,T,x, x},
-		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,T,T, x,T,T,T, T,x,x,x, x,x,x,x, x},
-		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
-		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,T,x,T, x,x},
+		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,T,T, x,T,T,T, T,x,x,x, x,x,x,x, x,x},
+		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, x,T,T,T, x,x}
 
 	};
 } // end Parser
@@ -841,17 +856,18 @@ public class Errors {
 			case 43: s = "\"bool\" expected"; break;
 			case 44: s = "\",\" expected"; break;
 			case 45: s = "\"const\" expected"; break;
-			case 46: s = "\"array\" expected"; break;
-			case 47: s = "??? expected"; break;
-			case 48: s = "invalid AddOp"; break;
-			case 49: s = "invalid RelOp"; break;
-			case 50: s = "invalid Primary"; break;
-			case 51: s = "invalid MulOp"; break;
-			case 52: s = "invalid Stat"; break;
+			case 46: s = "\"struct\" expected"; break;
+			case 47: s = "\"array\" expected"; break;
+			case 48: s = "??? expected"; break;
+			case 49: s = "invalid AddOp"; break;
+			case 50: s = "invalid RelOp"; break;
+			case 51: s = "invalid Primary"; break;
+			case 52: s = "invalid MulOp"; break;
 			case 53: s = "invalid Stat"; break;
 			case 54: s = "invalid Stat"; break;
 			case 55: s = "invalid Stat"; break;
-			case 56: s = "invalid Type"; break;
+			case 56: s = "invalid Stat"; break;
+			case 57: s = "invalid Type"; break;
 
 			default: s = "error " + n; break;
 		}

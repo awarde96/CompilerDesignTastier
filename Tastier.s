@@ -185,4 +185,7 @@ Main
    ;Rows: 6, Columns: 1
    ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 15
    ;Rows: 4, Columns: 4
+   ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 32
+   ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 33
+   ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 34
    ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0

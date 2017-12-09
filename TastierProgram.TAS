@@ -10,6 +10,11 @@ program Test {
    array int xyz[6];
    array int yyy[4][4];
 
+   struct a {
+    int b;
+    bool c;
+   }
+
    void main(){
       xy = 3;
       write "Constant xy = ";
