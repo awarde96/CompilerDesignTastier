@@ -424,6 +424,10 @@ out type);
 				if (obj.kind == constant)
 				  SemErr("cannot assign to constant");
 				
+				if (obj.parent != "null"){
+				  SemErr("cannot assign to structure variable");
+				}
+				
 				if (obj.kind != var)
 				  SemErr("cannot assign to procedure");
 				

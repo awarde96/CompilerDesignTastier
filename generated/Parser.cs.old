@@ -424,6 +424,10 @@ out type);
 				if (obj.kind == constant)
 				  SemErr("cannot assign to constant");
 				
+				if (obj.parent != "null"){
+				  SemErr("cannot assign to structure variable");
+				}
+				
 				if (obj.kind != var)
 				  SemErr("cannot assign to procedure");
 				
@@ -756,15 +760,15 @@ out typeR);
 	}
 
 	void StructDecl() {
-		string name; int type; 
+		string name; string structName; int type; 
 		Expect(46);
-		Ident(out nameStruct);
-		tab.NewObj(nameStruct, var, 3, scalar, 0,0,false,"null");
+		Ident(out structName);
+		tab.NewObj(structName, var, 3, scalar, 0,0,false,"null");  
 		Expect(16);
 		while (la.kind == 42 || la.kind == 43) {
 			Type(out type);
 			Ident(out name);
-			tab.NewObj(name, var, type, 1,0,0,false,nameStruct); 
+			tab.NewObj(name, var, type, 1,0,0,false,structName); 
 			Expect(27);
 		}
 		Expect(17);

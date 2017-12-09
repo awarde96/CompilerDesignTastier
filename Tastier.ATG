@@ -244,6 +244,11 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
                                SemErr("cannot assign to constant");
                          .)
                          (.
+                            if (obj.parent != "null"){
+                               SemErr("cannot assign to structure variable");
+                            }
+                         .)
+                         (.
                             if (obj.kind != var)
                                SemErr("cannot assign to procedure");
                          .)
