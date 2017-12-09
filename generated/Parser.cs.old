@@ -304,7 +304,7 @@ out type);
 		Obj obj; string procName; 
 		Expect(15);
 		Ident(out procName);
-		obj = tab.NewObj(procName, proc, undef,1,0,0, false);
+		obj = tab.NewObj(procName, proc, undef,1,0,0, false,"null");
 		if (procName == "main")
 		  if (tab.curLevel == 0)
 		     tab.mainPresent = true;
@@ -354,7 +354,7 @@ out type);
 		Expect(45);
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, constant, type,scalar,0,0,false); 
+		tab.NewObj(name, constant, type,scalar,0,0,false,"null"); 
 		Expect(27);
 	}
 
@@ -362,11 +362,11 @@ out type);
 		string name; int type; int sort = 1;
 		Type(out type);
 		Ident(out name);
-		tab.NewObj(name, var, type, sort,0,0,false); 
+		tab.NewObj(name, var, type, sort,0,0,false,"null"); 
 		while (la.kind == 44) {
 			Get();
 			Ident(out name);
-			tab.NewObj(name, var, type, sort,0,0,false); 
+			tab.NewObj(name, var, type, sort,0,0,false,"null"); 
 		}
 		Expect(27);
 	}
@@ -391,7 +391,7 @@ out type);
 			
 			Expect(25);
 		}
-		tab.NewObj(name, var, type,array,r,c,false); 
+		tab.NewObj(name, var, type,array,r,c,false,"null"); 
 		Expect(27);
 	}
 
@@ -758,11 +758,14 @@ out typeR);
 	void StructDecl() {
 		string name; int type; 
 		Expect(46);
-		Ident(out name);
-		tab.NewObj(name, var, 3, scalar, 0,0,false);
+		Ident(out nameStruct);
+		tab.NewObj(nameStruct, var, 3, scalar, 0,0,false,"null");
 		Expect(16);
 		while (la.kind == 42 || la.kind == 43) {
-			VarDecl();
+			Type(out type);
+			Ident(out name);
+			tab.NewObj(name, var, type, 1,0,0,false,nameStruct); 
+			Expect(27);
 		}
 		Expect(17);
 	}

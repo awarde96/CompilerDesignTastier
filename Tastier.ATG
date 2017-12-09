@@ -152,7 +152,7 @@ ProcDecl<string progName>
                          (. Obj obj; string procName; .)
 = "void"
   Ident<out procName>    (.
-                            obj = tab.NewObj(procName, proc, undef,1,0,0, false);
+                            obj = tab.NewObj(procName, proc, undef,1,0,0, false,"null");
                             if (procName == "main")
                                if (tab.curLevel == 0)
                                   tab.mainPresent = true;
@@ -542,9 +542,9 @@ Type<out int type>
 
 VarDecl                  (. string name; int type; int sort = 1;.)
 = Type<out type>
-  Ident<out name>        (. tab.NewObj(name, var, type, sort,0,0,false); .)
+  Ident<out name>        (. tab.NewObj(name, var, type, sort,0,0,false,"null"); .)
   { ","
-    Ident<out name>      (. tab.NewObj(name, var, type, sort,0,0,false); .)
+    Ident<out name>      (. tab.NewObj(name, var, type, sort,0,0,false,"null"); .)
   } ";"
 .
 
@@ -554,19 +554,21 @@ ConstantDecl                (. string name; int type;.)
 =
   "const"
   Type<out type>
-  Ident<out name>        (. tab.NewObj(name, constant, type,scalar,0,0,false); .)
+  Ident<out name>        (. tab.NewObj(name, constant, type,scalar,0,0,false,"null"); .)
   ';'
 .
 
 /*-------------------------------------------------------------------------------------------*/
 
-StructDecl               (. string name; int type; .)
+StructDecl               (. string name; string structName; int type; .)
 =
   "struct"
-  Ident<out name>        (. tab.NewObj(name, var, 3, scalar, 0,0,false);.)
+  Ident<out structName>        (. tab.NewObj(structName, var, 3, scalar, 0,0,false,"null");  .)
   '{'
     {
-      VarDecl
+      Type<out type>
+      Ident<out name>        (. tab.NewObj(name, var, type, 1,0,0,false,structName); .)
+      ';'
     }
   '}'
 .
@@ -590,7 +592,7 @@ ArrayDecl                (. int r; int c = 0; string name; int type;.)
                           c = Convert.ToInt32(t.val);
                        .)
   "]"
-  ]                    (. tab.NewObj(name, var, type,array,r,c,false); .)
+  ]                    (. tab.NewObj(name, var, type,array,r,c,false,"null"); .)
   ";"
 .
 END Tastier.

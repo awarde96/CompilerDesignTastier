@@ -12,6 +12,7 @@ public class Obj { // properties of declared symbol
    public int level;   // lexic level: 0 = global; >= 1 local
    public int adr;     // address (displacement) in scope
    public bool hasValue;
+   public string parent;
    public Obj next;    // ptr to next object in scope
    // for scopes
    public Obj outer;   // ptr to enclosing scope
@@ -114,7 +115,7 @@ public class SymbolTable {
           sortName = "array";
         }
 
-        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}",temp.name, typeName, kindName, sortName, temp.adr);
+        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}, parent: {5}",temp.name, typeName, kindName, sortName, temp.adr, temp.parent);
 
         if (sort == 2){
           Console.WriteLine("   ;Rows: {0}, Columns: {1}", temp.rows, temp.columns);
@@ -147,13 +148,14 @@ public class SymbolTable {
    }
 
 // create new object node in current scope
-   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns, bool hasValue ) {
+   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns, bool hasValue, string parent ) {
       Obj p, last;
       Obj obj = new Obj();
       obj.name = name; obj.kind = kind; obj.sort = sort;
       obj.rows = rows; obj.columns = columns;
       obj.type = type; obj.level = curLevel;
       obj.hasValue = hasValue;
+      obj.parent = parent;
       obj.next = null;
       p = topScope.locals; last = null;
       while (p != null) {
