@@ -4,7 +4,7 @@ COMPILER Tastier
       var = 0, proc = 1, constant = 3;
 
    const int // types
-      undef = 0, integer = 1, boolean = 2;
+      undef = 0, integer = 1, boolean = 2, structure = 3;
 
   const int // sorts
       none = 0, scalar = 1, array = 2;
@@ -218,7 +218,7 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; int reg = 0; int index = 0; int index2 = 0; String arrayName;.)
+Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
@@ -238,13 +238,25 @@ Stat                     (. int type; string name; Obj obj; int reg = 0; int ind
       "]"
     ]
   ]
+  [
+    '.'
+    Ident<out structName>      (.
+                                 temp = tab.Find(structName);
+                                 if(temp.parent == obj.name){
+                                    obj = temp;
+                                 }
+                                else{
+                                  SemErr("Variable does not belong to this struct");
+                                }
+                               .)
+  ]
 
   ( ":="                 (.
                             if (obj.kind == constant)
                                SemErr("cannot assign to constant");
                          .)
                          (.
-                            if (obj.parent != "null"){
+                            if (obj.type == structure){
                                SemErr("cannot assign to structure variable");
                             }
                          .)

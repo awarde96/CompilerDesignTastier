@@ -229,8 +229,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 48;
-	const int noSym = 48;
+	const int maxT = 49;
+	const int noSym = 49;
 
 
 	public Buffer buffer; // scanner buffer
@@ -264,14 +264,15 @@ public class Scanner {
 		start[123] = 11; 
 		start[125] = 12; 
 		start[61] = 13; 
-		start[60] = 23; 
-		start[62] = 24; 
+		start[60] = 24; 
+		start[62] = 25; 
 		start[33] = 14; 
 		start[91] = 18; 
 		start[93] = 19; 
-		start[58] = 25; 
-		start[59] = 21; 
-		start[44] = 22; 
+		start[46] = 20; 
+		start[58] = 26; 
+		start[59] = 22; 
+		start[44] = 23; 
 		start[Buffer.EOF] = -1;
 
 	}
@@ -391,24 +392,24 @@ public class Scanner {
 			case "mod": t.kind = 13; break;
 			case "MOD": t.kind = 14; break;
 			case "void": t.kind = 15; break;
-			case "switch": t.kind = 28; break;
-			case "case": t.kind = 30; break;
-			case "continue": t.kind = 31; break;
-			case "break": t.kind = 32; break;
-			case "default": t.kind = 33; break;
-			case "for": t.kind = 34; break;
-			case "if": t.kind = 35; break;
-			case "else": t.kind = 36; break;
-			case "while": t.kind = 37; break;
-			case "read": t.kind = 38; break;
-			case "write": t.kind = 39; break;
-			case "writeln": t.kind = 40; break;
-			case "program": t.kind = 41; break;
-			case "int": t.kind = 42; break;
-			case "bool": t.kind = 43; break;
-			case "const": t.kind = 45; break;
-			case "struct": t.kind = 46; break;
-			case "array": t.kind = 47; break;
+			case "switch": t.kind = 29; break;
+			case "case": t.kind = 31; break;
+			case "continue": t.kind = 32; break;
+			case "break": t.kind = 33; break;
+			case "default": t.kind = 34; break;
+			case "for": t.kind = 35; break;
+			case "if": t.kind = 36; break;
+			case "else": t.kind = 37; break;
+			case "while": t.kind = 38; break;
+			case "read": t.kind = 39; break;
+			case "write": t.kind = 40; break;
+			case "writeln": t.kind = 41; break;
+			case "program": t.kind = 42; break;
+			case "int": t.kind = 43; break;
+			case "bool": t.kind = 44; break;
+			case "const": t.kind = 46; break;
+			case "struct": t.kind = 47; break;
+			case "array": t.kind = 48; break;
 			default: break;
 		}
 	}
@@ -488,19 +489,21 @@ public class Scanner {
 			case 21:
 				{t.kind = 27; break;}
 			case 22:
-				{t.kind = 44; break;}
+				{t.kind = 28; break;}
 			case 23:
+				{t.kind = 45; break;}
+			case 24:
 				recEnd = pos; recKind = 19;
 				if (ch == '=') {AddCh(); goto case 16;}
 				else {t.kind = 19; break;}
-			case 24:
+			case 25:
 				recEnd = pos; recKind = 20;
 				if (ch == '=') {AddCh(); goto case 17;}
 				else {t.kind = 20; break;}
-			case 25:
-				recEnd = pos; recKind = 29;
-				if (ch == '=') {AddCh(); goto case 20;}
-				else {t.kind = 29; break;}
+			case 26:
+				recEnd = pos; recKind = 30;
+				if (ch == '=') {AddCh(); goto case 21;}
+				else {t.kind = 30; break;}
 
 		}
 		t.val = new String(tval, 0, tlen);

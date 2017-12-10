@@ -15,8 +15,10 @@ program Test {
     bool c;
    }
 
+
    void main(){
       xy = 3;
+      a.b := 2;
       write "Constant xy = ";
       writeln xy;
       zzz[0] := 8;
