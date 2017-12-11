@@ -19,6 +19,9 @@ program Test {
    void main(){
       xy = 3;
       a.b := 2;
+      i := .b;
+      write "a.b := ";
+      writeln i;
       write "Constant xy = ";
       writeln xy;
       zzz[0] := 8;

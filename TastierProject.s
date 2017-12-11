@@ -36,12 +36,29 @@ MainBody
     LDR R2, =33
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; a
+    LDR R2, =33
+    ADD R2, R4, R2, LSL #2
+    LDR R0, [R2] ; b
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L1
-    DCB     "Constant xy = ", 0
+    DCB     "a.b := ", 0
     ALIGN
 L1
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintIntLf
+    ADD     R0, PC, #4      ; string address
+    BL      TastierPrintString
+    B       L2
+    DCB     "Constant xy = ", 0
+    ALIGN
+L2
     LDR R2, =3
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; xy
@@ -59,10 +76,10 @@ L1
     STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L2
+    B       L3
     DCB     "[0]zzz = ", 0
     ALIGN
-L2
+L3
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; i
@@ -92,10 +109,10 @@ L2
     STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L3
+    B       L4
     DCB     "[2][2]yyy = ", 0
     ALIGN
-L3
+L4
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; i
@@ -113,43 +130,43 @@ L3
     MOVEQ   R6, #1
     MOVNE   R6, #0
     MOVS    R6, R6          ; reset Z flag in CPSR
-    BEQ     L5              ; jump on condition false
+    BEQ     L6              ; jump on condition false
     LDR     R5, =1
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L5
+L6
     LDR     R6, =2
     LDR     R5, =2
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L6
+L7
     LDR     R6, =3
     LDR     R5, =3
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L4
-L7
+    B       L5
+L8
     LDR     R6, =4
     LDR     R5, =4
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L4
-L8
+    B       L5
+L9
     LDR     R5, =10
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L4
+L5
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L9
+    B       L10
     DCB     "j = ", 0
     ALIGN
-L9
+L10
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; j
@@ -159,7 +176,7 @@ L9
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; n
-L10
+L11
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
@@ -168,9 +185,9 @@ L10
     MOVLT   R5, #1
     MOVGE   R5, #0
     MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L11              ; jump on condition false
-    B       L12
-L13
+    BEQ     L12              ; jump on condition false
+    B       L13
+L14
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
@@ -179,8 +196,8 @@ L13
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; n
-    B       L10
-L12
+    B       L11
+L13
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; j
@@ -189,8 +206,8 @@ L12
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L13
-L11
+    B       L14
+L12
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n

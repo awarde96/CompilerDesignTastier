@@ -497,6 +497,14 @@ out type);
 					 SemErr("Incompatable types");
 					}
 					
+					if (temp.level == 0)
+					  gen.LoadGlobal(reg, temp.adr, structName);
+					else gen.LoadLocal(reg, tab.curLevel-obj.level, temp.adr, structName);
+					
+					if (obj.level == 0)
+					  gen.StoreGlobal(reg, obj.adr, name);
+					else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					
 				} else SynErr(54);
 				Expect(28);
 			} else if (la.kind == 8) {

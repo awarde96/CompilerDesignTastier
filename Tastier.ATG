@@ -306,13 +306,22 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
                               gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
                          .)
 
-      |'.'
+      |
+        '.'
           Ident<out structName>
                               (. temp = tab.Find(structName);
 
                                  if(temp.type != obj.type){
                                    SemErr("Incompatable types");
                                  }
+
+                                 if (temp.level == 0)
+                                    gen.LoadGlobal(reg, temp.adr, structName);
+                                 else gen.LoadLocal(reg, tab.curLevel-obj.level, temp.adr, structName);
+
+                                 if (obj.level == 0)
+                                    gen.StoreGlobal(reg, obj.adr, name);
+                                 else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
                               .)
 
     )';'
