@@ -218,7 +218,7 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName;.)
+Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
@@ -308,8 +308,18 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
 
       |
         '.'
+          Ident<out sName>
+          '.'
           Ident<out structName>
                               (. temp = tab.Find(structName);
+                                 Obj temp1 = tab.Find(sName);
+
+                                 if(temp1.type != structure){
+                                    SemErr("Must be of type structure");
+                                 }
+                                 if(temp1.name != temp.parent){
+                                    SemErr("Variable does not belong to struct");
+                                 }
 
                                  if(temp.type != obj.type){
                                    SemErr("Incompatable types");

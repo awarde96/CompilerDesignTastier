@@ -238,6 +238,7 @@ Main
    ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 32, parent: null
    ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 33, parent: a
    ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 34, parent: a
+   ;Name: check, Type: struct, Kind: var, Sort: scalar, address: 35, parent: null
    ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0, parent: null
 
 ; Subroutine enter

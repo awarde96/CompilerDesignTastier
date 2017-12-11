@@ -396,7 +396,7 @@ out type);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName;
+		int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
@@ -490,8 +490,18 @@ out type);
 					
 				} else if (la.kind == 26) {
 					Get();
+					Ident(out sName);
+					Expect(26);
 					Ident(out structName);
 					temp = tab.Find(structName);
+					Obj temp1 = tab.Find(sName);
+					
+					if(temp1.type != structure){
+					  SemErr("Must be of stype structure");
+					}
+					if(temp1.name != temp.parent){
+					  SemErr("Variable does not belong to struct");
+					}
 					
 					if(temp.type != obj.type){
 					 SemErr("Incompatable types");

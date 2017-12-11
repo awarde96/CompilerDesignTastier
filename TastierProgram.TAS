@@ -15,11 +15,15 @@ program Test {
     bool c;
    }
 
+   struct check{
+
+   }
+
 
    void main(){
       xy = 3;
       a.b := 2;
-      i := .b;
+      i := .a.b;
       write "a.b := ";
       writeln i;
       write "Constant xy = ";
