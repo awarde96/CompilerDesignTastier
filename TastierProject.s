@@ -32,6 +32,10 @@ MainBody
     LDR R2, =3
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xy
+    LDR     R5, =2
+    LDR R2, =33
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; a
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L1

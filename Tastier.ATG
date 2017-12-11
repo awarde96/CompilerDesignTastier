@@ -245,9 +245,9 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
                                  if(temp.parent == obj.name){
                                     obj = temp;
                                  }
-                                else{
-                                  SemErr("Variable does not belong to this struct");
-                                }
+                                 else{
+                                   SemErr("Variable does not belong to this struct");
+                                 }
                                .)
   ]
 
@@ -305,6 +305,15 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
                            else
                               gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
                          .)
+
+      |'.'
+          Ident<out structName>
+                              (. temp = tab.Find(structName);
+
+                                 if(temp.type != obj.type){
+                                   SemErr("Incompatable types");
+                                 }
+                              .)
 
     )';'
 

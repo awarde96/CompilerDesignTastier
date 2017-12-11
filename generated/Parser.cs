@@ -427,7 +427,7 @@ out type);
 				  obj = temp;
 				}
 				else{
-				SemErr("Variable does not belong to this struct");
+				 SemErr("Variable does not belong to this struct");
 				}
 				
 			}
@@ -487,6 +487,15 @@ out type);
 					  gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
 					else
 					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
+					
+				} else if (la.kind == 26) {
+					Get();
+					Ident(out structName);
+					temp = tab.Find(structName);
+					
+					if(temp.type != obj.type){
+					 SemErr("Incompatable types");
+					}
 					
 				} else SynErr(54);
 				Expect(28);
