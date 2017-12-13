@@ -174,7 +174,8 @@ ProcDecl<string progName>
                                gen.Label(procName, "Body");
                             }
                          .)
-     Stat { Stat }
+     Stat {Stat
+     }
   '}'                    (.
                             if (procName == "main") {
                                gen.StopProgram(progName);
@@ -218,14 +219,22 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
+Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int newreg; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
-        number           (.
-                          index = Convert.ToInt32(t.val);
-                          if(index > obj.rows | obj.rows < 0)
-                            SemErr("array index rows out of bounds");
+        Expr<out reg,
+            out type>    (.
+                            gen.GetRegister();
+                            int l1 = 0;
+                            l1 = gen.NewLabel();
+                            newreg = gen.GetRegister();
+                            gen.LoadConstant(newreg,obj.rows);
+                            gen.RelOp(Op.GEQ,reg,newreg);
+                            gen.BranchFalse(l1);
+                            string text = "\"Error: Index out of bounds\"";
+                            gen.WriteString(text);
+                            gen.Label(l1);
                          .)
     "]"
     [

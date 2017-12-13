@@ -19,6 +19,10 @@ program Test {
 
    }
 
+   void set(){
+      i := 22;
+   }
+
 
    void main(){
       xy = 3;
@@ -28,7 +32,9 @@ program Test {
       writeln i;
       write "Constant xy = ";
       writeln xy;
-      zzz[0] := 8;
+      zzz[i] := 8;
+      i := 8;
+      zzz[i] := 3;
       i := [0]zzz;
       write "[0]zzz = ";
       writeln i;
@@ -65,5 +71,7 @@ program Test {
       }
       writeln n;
       writeln j;
+      set();
+      writeln i;
    }
 }
