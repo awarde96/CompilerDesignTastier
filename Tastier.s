@@ -49,50 +49,18 @@ L2
     LDR R5, [R2] ; xy
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    LDR R5, [R2] ; i
-    LDR     R6, =3
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L3              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L4
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L4
-L3
-    LDR     R7, =8
+    LDR     R5, =8
     LDR R2, =4
     ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; zzz
+    STR R5, [R2] ; zzz
     LDR     R5, =8
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; i
-    LDR R2, =0
+    LDR     R5, =3
+    LDR R2, =6
     ADD R2, R4, R2, LSL #2
-    LDR R5, [R2] ; i
-    LDR     R6, =3
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L5              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L6
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L6
-L5
-    LDR     R7, =3
-    LDR R2, =4
-    ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; zzz
+    STR R5, [R2] ; zzz
     LDR R2, =4
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; zzz
@@ -101,87 +69,31 @@ L5
     STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L7
+    B       L3
     DCB     "[0]zzz = ", 0
     ALIGN
-L7
+L3
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR     R5, =1
-    LDR     R6, =3
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L8              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L9
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L9
-L8
-    LDR     R7, =9
-    LDR R2, =4
+    LDR     R5, =9
+    LDR R2, =5
     ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; zzz
-    LDR     R5, =0
-    LDR     R6, =6
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L10              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L11
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L11
-L10
-    LDR     R7, =7
+    STR R5, [R2] ; zzz
+    LDR     R5, =7
     LDR R2, =8
     ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; xyz
-    LDR     R5, =0
-    LDR     R6, =4
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L12              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L13
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L13
-L12
-    LDR     R7, =6
+    STR R5, [R2] ; xyz
+    LDR     R5, =6
     LDR R2, =15
     ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; yyy
-    LDR     R5, =2
-    LDR     R6, =4
-    CMP     R5, R6
-    MOVGE   R5, #1
-    MOVLT   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L14              ; jump on condition false
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L15
-    DCB     "Error: Index out of bounds", 0
-    ALIGN
-L15
-L14
-    LDR     R7, =12
-    LDR R2, =23
+    STR R5, [R2] ; yyy
+    LDR     R5, =12
+    LDR R2, =25
     ADD R2, R4, R2, LSL #2
-    STR R7, [R2] ; yyy
+    STR R5, [R2] ; yyy
     LDR R2, =25
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; yyy
@@ -190,10 +102,10 @@ L14
     STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L16
+    B       L4
     DCB     "[2][2]yyy = ", 0
     ALIGN
-L16
+L4
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; i
@@ -211,43 +123,43 @@ L16
     MOVEQ   R6, #1
     MOVNE   R6, #0
     MOVS    R6, R6          ; reset Z flag in CPSR
-    BEQ     L18              ; jump on condition false
+    BEQ     L6              ; jump on condition false
     LDR     R5, =1
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L18
+L6
     LDR     R6, =2
     LDR     R5, =2
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L19
+L7
     LDR     R6, =3
     LDR     R5, =3
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L17
-L20
+    B       L5
+L8
     LDR     R6, =4
     LDR     R5, =4
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L17
-L21
+    B       L5
+L9
     LDR     R5, =10
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-L17
+L5
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
-    B       L22
+    B       L10
     DCB     "j = ", 0
     ALIGN
-L22
+L10
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; j
@@ -257,7 +169,7 @@ L22
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; n
-L23
+L11
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
@@ -266,9 +178,9 @@ L23
     MOVLT   R5, #1
     MOVGE   R5, #0
     MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L24              ; jump on condition false
-    B       L25
-L26
+    BEQ     L12              ; jump on condition false
+    B       L13
+L14
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
@@ -277,8 +189,8 @@ L26
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; n
-    B       L23
-L25
+    B       L11
+L13
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; j
@@ -287,24 +199,28 @@ L25
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; j
-    B       L26
-L24
+    B       L14
+L12
+    ADD     R0, PC, #4      ; string address
+    BL      TastierPrintString
+    B       L15
+    DCB     "n = ", 0
+    ALIGN
+L15
     LDR R2, =2
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; n
     MOV     R0, R5
     BL      TastierPrintIntLf
+    ADD     R0, PC, #4      ; string address
+    BL      TastierPrintString
+    B       L16
+    DCB     "j = ", 0
+    ALIGN
+L16
     LDR R2, =1
     ADD R2, R4, R2, LSL #2
     LDR R5, [R2] ; j
-    MOV     R0, R5
-    BL      TastierPrintIntLf
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       set
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
 StopTest

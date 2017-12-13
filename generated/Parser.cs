@@ -403,18 +403,10 @@ out type);
 			obj = tab.Find(name); 
 			if (la.kind == 24) {
 				Get();
-				Expr(out reg,
-out type);
-				gen.GetRegister();
-				int l1 = 0;
-				l1 = gen.NewLabel();
-				newreg = gen.GetRegister();
-				gen.LoadConstant(newreg,obj.rows);
-				gen.RelOp(Op.GEQ,reg,newreg);
-				gen.BranchFalse(l1);
-				string text = "\"Error: Index out of bounds\"";
-				gen.WriteString(text);
-				gen.Label(l1);
+				Expect(1);
+				index = Convert.ToInt32(t.val);
+				if(index > obj.rows | obj.rows < 0)
+				 SemErr("array index rows out of bounds");
 				
 				Expect(25);
 				if (la.kind == 24) {
