@@ -8,7 +8,7 @@ program Test {
    const int xy;
    array int zzz[3];
    array int xyz[6];
-   array int yyy[4][4];
+   //array int yyy[4][4];
 
    struct a {
     int b;
@@ -40,9 +40,9 @@ program Test {
       writeln i;
       zzz[1] := 9;
       xyz[0] := 7;
-      yyy[0][0] := 6;
-      yyy[2][2] := 12;
-      i := [2][2]yyy;
+      //yyy[0][0] := 6;
+      //yyy[2][2] := 12;
+      //i := [2][2]yyy;
       write "[2][2]yyy = ";
       writeln i;
       i := 2;

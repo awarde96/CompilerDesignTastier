@@ -396,17 +396,16 @@ out type);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; Obj temp;int reg = 0; int newreg; int index = 0; int index2 = 0; String arrayName; string structName; string sName;
+		int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
 			obj = tab.Find(name); 
 			if (la.kind == 24) {
 				Get();
-				Expect(1);
-				index = Convert.ToInt32(t.val);
-				if(index > obj.rows | obj.rows < 0)
-				 SemErr("array index rows out of bounds");
+				Expr(out reg,
+out type);
+				index = reg;
 				
 				Expect(25);
 				if (la.kind == 24) {
@@ -467,7 +466,7 @@ out type);
 					Ident(out arrayName);
 					Obj arrayObj = tab.Find(arrayName);
 					
-					if(rowIndex > arrayObj.rows | rowIndex < 0){
+					/*if(rowIndex > arrayObj.rows | rowIndex < 0){
 					 SemErr("index rows out of bounds");
 					}
 					
@@ -477,16 +476,16 @@ out type);
 					
 					if(arrayObj.type != obj.type){
 					 SemErr("Incompatable types");
-					}
+					}*/
 					
 					if (arrayObj.level == 0)
-					  gen.LoadGlobal(reg, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
-					else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
+					  gen.LoadIndexedGlobal(reg, arrayObj.adr, index,arrayName);
+					else gen.LoadIndexedLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr,index , arrayName);
 					
 					if (obj.level == 0)
-					  gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
+					  gen.StoreIndexedGlobal(reg, obj.adr,index, name);
 					else
-					  gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
+					  gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
 					
 				} else if (la.kind == 26) {
 					Get();

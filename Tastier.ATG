@@ -219,14 +219,13 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int newreg; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
+Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
-        number           (.
-                            index = Convert.ToInt32(t.val);
-                            if(index > obj.rows | obj.rows < 0)
-                              SemErr("array index rows out of bounds");
+        Expr<out reg,
+            out type>     (.
+                            index = reg;
                          .)
     "]"
     [
@@ -275,7 +274,8 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
                             else SemErr("incompatible types");
                          .)
      |"["                 (. int rowIndex = 0; int columnIndex = 0; .)
-        number            (. rowIndex = Convert.ToInt32(t.val);.)
+        Expr<out reg,
+            out type>     (. rowIndex = reg;.)
       "]"
      [
       "["
@@ -285,7 +285,7 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
      Ident<out arrayName>
                          (.Obj arrayObj = tab.Find(arrayName);
 
-                           if(rowIndex > arrayObj.rows | rowIndex < 0){
+                           /*if(rowIndex > arrayObj.rows | rowIndex < 0){
                              SemErr("index rows out of bounds");
                            }
 
@@ -295,16 +295,16 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
 
                            if(arrayObj.type != obj.type){
                              SemErr("Incompatable types");
-                           }
+                           }*/
 
                            if (arrayObj.level == 0)
-                              gen.LoadGlobal(reg, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
-                           else gen.LoadLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr + rowIndex+(columnIndex*arrayObj.rows), arrayName);
+                              gen.LoadIndexedGlobal(reg, arrayObj.adr, rowIndex,arrayName);
+                           else gen.LoadIndexedLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr, rowIndex , arrayName);
 
                            if (obj.level == 0)
-                              gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
+                              gen.StoreIndexedGlobal(reg, obj.adr,index, name);
                            else
-                              gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
+                              gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
                          .)
 
       |

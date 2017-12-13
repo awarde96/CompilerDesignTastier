@@ -47,10 +47,10 @@ MainBody
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xy
     LDR     R5, =2
-    LDR R2, =33
+    LDR R2, =16
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; a
-    LDR R2, =33
+    LDR R2, =16
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; b
     LDR R2, =0
@@ -78,24 +78,27 @@ L2
     LDR R5, [R2] ; xy
     MOV     R0, R5
     BL      TastierPrintIntLf
+    LDR     R5, =0
     LDR     R5, =8
-    LDR R2, =4
+    LDR R2, =9
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
     LDR     R5, =8
     LDR R2, =0
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; i
+    LDR     R5, =2
     LDR     R5, =3
-    LDR R2, =6
+    LDR R2, =9
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
-    LDR R2, =4
-    ADD R2, R4, R2, LSL #2
-    LDR R0, [R2] ; zzz
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    STR R0, [R2] ; i
+    LDR     R5, =0
+    LDR     R2, =4
+    ADD     R2, R4, R2, LSL #2
+    LDR     R5, [R2, R5, LSL #2] ; value of zzz[]
+    LDR     R2, =0
+    ADD     R2, R4, R2, LSL #2
+    STR     R5, [R2, R0, LSL #2] ; value of i[]
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L3
@@ -107,28 +110,16 @@ L3
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
+    LDR     R5, =1
     LDR     R5, =9
-    LDR R2, =5
+    LDR R2, =9
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; zzz
+    LDR     R5, =0
     LDR     R5, =7
-    LDR R2, =8
+    LDR R2, =13
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xyz
-    LDR     R5, =6
-    LDR R2, =15
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; yyy
-    LDR     R5, =12
-    LDR R2, =25
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; yyy
-    LDR R2, =25
-    ADD R2, R4, R2, LSL #2
-    LDR R0, [R2] ; yyy
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    STR R0, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L4
@@ -267,12 +258,10 @@ Main
    ;Rows: 3, Columns: 1
    ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 8, parent: null
    ;Rows: 6, Columns: 1
-   ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 15, parent: null
-   ;Rows: 4, Columns: 4
-   ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 32, parent: null
-   ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 33, parent: a
-   ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 34, parent: a
-   ;Name: check, Type: struct, Kind: var, Sort: scalar, address: 35, parent: null
+   ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 15, parent: null
+   ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 16, parent: a
+   ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 17, parent: a
+   ;Name: check, Type: struct, Kind: var, Sort: scalar, address: 18, parent: null
    ;Name: set, Type: undef, Kind: proc, Sort: scalar, address: 0, parent: null
    ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0, parent: null
 
