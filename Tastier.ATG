@@ -73,23 +73,45 @@ Expr<out int reg,        // load value of Expr into register
 /*-------------------------------------------------------------------------------------------*/
 
 Primary<out int reg,     // load Primary into register
-        out int type>    (. int n; Obj obj; string name; .)
+        out int type>    (. int n; Obj obj; string name; int index=0;.)
 =                        (.
                             type = undef;
                             reg = gen.GetRegister();
                          .)
-  ( Ident<out name>      (.
-                            obj = tab.Find(name); type = obj.type;
-                            if (obj.kind == var || obj.kind == constant) {
-                               if (obj.level == 0)
-                                  gen.LoadGlobal(reg, obj.adr, name);
-                               else
+  ( Ident<out name>      (..)
+    [
+      "["
+        Expr<out reg,
+            out type>    (.
+                            index = reg;
+                         .)
+      "]"
+    ]
+                          (.  obj = tab.Find(name); type = obj.type;
+                            if (obj.sort == scalar){
+                              if (obj.kind == var || obj.kind == constant) {
+                                if (obj.level == 0)
+                                    gen.LoadGlobal(reg, obj.adr, name);
+                                else
                                   gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
-                               if (type == boolean)
-                               // reset Z flag in CPSR
+                                if (type == boolean)
+                                // reset Z flag in CPSR
+                                  gen.ResetZ(reg);
+                              }
+                              else SemErr("variable expected");
+                            }
+                            else{
+                              if (obj.kind == var || obj.kind == constant) {
+                                if (obj.level == 0)
+                                    gen.LoadIndexedGlobal(reg, obj.adr,index, name);
+                                else
+                                    gen.LoadIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
+                                if (type == boolean)
+                                // reset Z flag in CPSR
                                   gen.ResetZ(reg);
                             }
                             else SemErr("variable expected");
+                            }
                          .)
 
   | number               (.
@@ -219,21 +241,23 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 /*-------------------------------------------------------------------------------------------*/
 
-Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
+Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0; int regI; int index = 0; int index2 = 0; String arrayName; string structName; string sName;.)
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
-        Expr<out reg,
-            out type>     (.
-                            index = reg;
+        number
+                         (.
+
+                            gen.LoadConstant(index, Int32.Parse(t.val));
+                            //gen.RelOp(Op.EQU,reg2,reg1);
+                            //gen.BranchFalse(l2);
                          .)
     "]"
     [
       "["
           number         (.
-                           index2 = Convert.ToInt32(t.val);
-                           if(index2 > obj.columns | obj.columns < 0)
-                             SemErr("array index columns out of bounds");
+                           gen.GetRegister();
+                           gen.LoadConstant(index2, Int32.Parse(t.val));
                          .)
       "]"
     ]
@@ -269,43 +293,23 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
          out type>       (.
                             if (type == obj.type)
                                if (obj.level == 0)
-                                  gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
-                               else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
+                                  if(obj.sort == scalar){
+                                    gen.StoreGlobal(reg, obj.adr, name);
+                                  }
+                                  else{
+                                    gen.StoreIndexedGlobal(reg,obj.adr,index,name);
+                                  }
+                               else {
+                                  if(obj.sort == scalar){
+                                    gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+                                  }
+                                  else{
+                                    gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr, index,name);
+                                  }
+                               }
                             else SemErr("incompatible types");
                          .)
-     |"["                 (. int rowIndex = 0; int columnIndex = 0; .)
-        Expr<out reg,
-            out type>     (. rowIndex = reg;.)
-      "]"
-     [
-      "["
-        number            (. columnIndex = Convert.ToInt32(t.val);.)
-      "]"
-     ]
-     Ident<out arrayName>
-                         (.Obj arrayObj = tab.Find(arrayName);
 
-                           /*if(rowIndex > arrayObj.rows | rowIndex < 0){
-                             SemErr("index rows out of bounds");
-                           }
-
-                           if(columnIndex > arrayObj.rows | columnIndex < 0){
-                             SemErr("index columns out of bounds");
-                           }
-
-                           if(arrayObj.type != obj.type){
-                             SemErr("Incompatable types");
-                           }*/
-
-                           if (arrayObj.level == 0)
-                              gen.LoadIndexedGlobal(reg, arrayObj.adr, rowIndex,arrayName);
-                           else gen.LoadIndexedLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr, rowIndex , arrayName);
-
-                           if (obj.level == 0)
-                              gen.StoreIndexedGlobal(reg, obj.adr,index, name);
-                           else
-                              gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
-                         .)
 
       |
         '.'

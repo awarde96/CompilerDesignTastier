@@ -32,10 +32,13 @@ program Test {
       writeln i;
       write "Constant xy = ";
       writeln xy;
-      zzz[0] := 8;
-      i := 8;
-      zzz[2] := 3;
-      i := [0]zzz;
+      zzz[2] := 8;
+      i := zzz[2];
+      writeln i;
+      //i := 8;
+      //zzz[2] := 3;
+      zzz[0] := 88;
+      i := zzz[0];
       write "[0]zzz = ";
       writeln i;
       zzz[1] := 9;

@@ -258,17 +258,17 @@ public class Scanner {
 		start[34] = 3; 
 		start[43] = 6; 
 		start[45] = 7; 
-		start[40] = 8; 
-		start[41] = 9; 
-		start[42] = 10; 
-		start[123] = 11; 
-		start[125] = 12; 
-		start[61] = 13; 
+		start[91] = 8; 
+		start[93] = 9; 
+		start[40] = 10; 
+		start[41] = 11; 
+		start[42] = 12; 
+		start[123] = 13; 
+		start[125] = 14; 
+		start[61] = 15; 
 		start[60] = 24; 
 		start[62] = 25; 
-		start[33] = 14; 
-		start[91] = 18; 
-		start[93] = 19; 
+		start[33] = 16; 
 		start[46] = 20; 
 		start[58] = 26; 
 		start[59] = 22; 
@@ -385,13 +385,13 @@ public class Scanner {
 
 	void CheckLiteral() {
 		switch (t.val) {
-			case "true": t.kind = 6; break;
-			case "false": t.kind = 7; break;
-			case "div": t.kind = 11; break;
-			case "DIV": t.kind = 12; break;
-			case "mod": t.kind = 13; break;
-			case "MOD": t.kind = 14; break;
-			case "void": t.kind = 15; break;
+			case "true": t.kind = 8; break;
+			case "false": t.kind = 9; break;
+			case "div": t.kind = 13; break;
+			case "DIV": t.kind = 14; break;
+			case "mod": t.kind = 15; break;
+			case "MOD": t.kind = 16; break;
+			case "void": t.kind = 17; break;
 			case "switch": t.kind = 29; break;
 			case "case": t.kind = 31; break;
 			case "continue": t.kind = 32; break;
@@ -460,24 +460,24 @@ public class Scanner {
 			case 7:
 				{t.kind = 5; break;}
 			case 8:
-				{t.kind = 8; break;}
+				{t.kind = 6; break;}
 			case 9:
-				{t.kind = 9; break;}
+				{t.kind = 7; break;}
 			case 10:
 				{t.kind = 10; break;}
 			case 11:
-				{t.kind = 16; break;}
+				{t.kind = 11; break;}
 			case 12:
-				{t.kind = 17; break;}
+				{t.kind = 12; break;}
 			case 13:
 				{t.kind = 18; break;}
 			case 14:
-				if (ch == '=') {AddCh(); goto case 15;}
-				else {goto case 0;}
+				{t.kind = 19; break;}
 			case 15:
-				{t.kind = 21; break;}
+				{t.kind = 20; break;}
 			case 16:
-				{t.kind = 22; break;}
+				if (ch == '=') {AddCh(); goto case 17;}
+				else {goto case 0;}
 			case 17:
 				{t.kind = 23; break;}
 			case 18:
@@ -493,13 +493,13 @@ public class Scanner {
 			case 23:
 				{t.kind = 45; break;}
 			case 24:
-				recEnd = pos; recKind = 19;
-				if (ch == '=') {AddCh(); goto case 16;}
-				else {t.kind = 19; break;}
+				recEnd = pos; recKind = 21;
+				if (ch == '=') {AddCh(); goto case 18;}
+				else {t.kind = 21; break;}
 			case 25:
-				recEnd = pos; recKind = 20;
-				if (ch == '=') {AddCh(); goto case 17;}
-				else {t.kind = 20; break;}
+				recEnd = pos; recKind = 22;
+				if (ch == '=') {AddCh(); goto case 19;}
+				else {t.kind = 22; break;}
 			case 26:
 				recEnd = pos; recKind = 30;
 				if (ch == '=') {AddCh(); goto case 21;}

@@ -78,27 +78,35 @@ L2
     LDR R5, [R2] ; xy
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR     R5, =0
+    LDR     R0, =2
     LDR     R5, =8
-    LDR R2, =9
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; zzz
-    LDR     R5, =8
-    LDR R2, =0
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; i
-    LDR     R5, =2
-    LDR     R5, =3
-    LDR R2, =9
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; zzz
-    LDR     R5, =0
     LDR     R2, =4
     ADD     R2, R4, R2, LSL #2
-    LDR     R5, [R2, R5, LSL #2] ; value of zzz[]
-    LDR     R2, =0
+    STR     R5, [R2, R0, LSL #2] ; value of zzz[]
+    LDR     R6, =2
+    LDR     R2, =4
     ADD     R2, R4, R2, LSL #2
-    STR     R5, [R2, R0, LSL #2] ; value of i[]
+    LDR     R6, [R2, R6, LSL #2] ; value of zzz[]
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R6, [R2] ; i
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    LDR R5, [R2] ; i
+    MOV     R0, R5
+    BL      TastierPrintIntLf
+    LDR     R0, =0
+    LDR     R5, =88
+    LDR     R2, =4
+    ADD     R2, R4, R2, LSL #2
+    STR     R5, [R2, R0, LSL #2] ; value of zzz[]
+    LDR     R6, =0
+    LDR     R2, =4
+    ADD     R2, R4, R2, LSL #2
+    LDR     R6, [R2, R6, LSL #2] ; value of zzz[]
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R6, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L3
@@ -110,16 +118,16 @@ L3
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR     R5, =1
+    LDR     R0, =1
     LDR     R5, =9
-    LDR R2, =9
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; zzz
-    LDR     R5, =0
+    LDR     R2, =4
+    ADD     R2, R4, R2, LSL #2
+    STR     R5, [R2, R0, LSL #2] ; value of zzz[]
+    LDR     R0, =0
     LDR     R5, =7
-    LDR R2, =13
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; xyz
+    LDR     R2, =8
+    ADD     R2, R4, R2, LSL #2
+    STR     R5, [R2, R0, LSL #2] ; value of xyz[]
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L4

@@ -170,31 +170,31 @@ out typeR);
 	void RelOp(out Op op) {
 		op = Op.EQU; 
 		switch (la.kind) {
-		case 18: {
-			Get();
-			break;
-		}
-		case 19: {
-			Get();
-			op = Op.LSS; 
-			break;
-		}
 		case 20: {
 			Get();
-			op = Op.GTR; 
 			break;
 		}
 		case 21: {
 			Get();
-			op = Op.NEQ; 
+			op = Op.LSS; 
 			break;
 		}
 		case 22: {
 			Get();
-			op = Op.LEQ; 
+			op = Op.GTR; 
 			break;
 		}
 		case 23: {
+			Get();
+			op = Op.NEQ; 
+			break;
+		}
+		case 24: {
+			Get();
+			op = Op.LEQ; 
+			break;
+		}
+		case 25: {
 			Get();
 			op = Op.GEQ; 
 			break;
@@ -205,24 +205,47 @@ out typeR);
 
 	void Primary(out int reg,     // load Primary into register
 out int type) {
-		int n; Obj obj; string name; 
+		int n; Obj obj; string name; int index=0;
 		type = undef;
 		reg = gen.GetRegister();
 		
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
+			
+			if (la.kind == 6) {
+				Get();
+				Expr(out reg,
+out type);
+				index = reg;
+				
+				Expect(7);
+			}
 			obj = tab.Find(name); type = obj.type;
+			if (obj.sort == scalar){
 			if (obj.kind == var || obj.kind == constant) {
-			  if (obj.level == 0)
+			 if (obj.level == 0)
 			     gen.LoadGlobal(reg, obj.adr, name);
-			  else
-			     gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
-			  if (type == boolean)
-			  // reset Z flag in CPSR
-			     gen.ResetZ(reg);
+			 else
+			   gen.LoadLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+			 if (type == boolean)
+			 // reset Z flag in CPSR
+			   gen.ResetZ(reg);
 			}
 			else SemErr("variable expected");
+			}
+			else{
+			if (obj.kind == var || obj.kind == constant) {
+			 if (obj.level == 0)
+			     gen.LoadIndexedGlobal(reg, obj.adr,index, name);
+			 else
+			     gen.LoadIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
+			 if (type == boolean)
+			 // reset Z flag in CPSR
+			   gen.ResetZ(reg);
+			}
+			else SemErr("variable expected");
+			}
 			
 			break;
 		}
@@ -244,25 +267,25 @@ out type);
 			
 			break;
 		}
-		case 6: {
+		case 8: {
 			Get();
 			type = boolean;
 			gen.LoadTrue(reg);
 			
 			break;
 		}
-		case 7: {
+		case 9: {
 			Get();
 			type = boolean;
 			gen.LoadFalse(reg);
 			
 			break;
 		}
-		case 8: {
+		case 10: {
 			Get();
 			Expr(out reg,
 out type);
-			Expect(9);
+			Expect(11);
 			break;
 		}
 		default: SynErr(52); break;
@@ -281,17 +304,17 @@ out type);
 
 	void MulOp(out Op op) {
 		op = Op.MUL; 
-		if (la.kind == 10) {
+		if (la.kind == 12) {
 			Get();
-		} else if (la.kind == 11 || la.kind == 12) {
-			if (la.kind == 11) {
+		} else if (la.kind == 13 || la.kind == 14) {
+			if (la.kind == 13) {
 				Get();
 			} else {
 				Get();
 			}
 			op = Op.DIV; 
-		} else if (la.kind == 13 || la.kind == 14) {
-			if (la.kind == 13) {
+		} else if (la.kind == 15 || la.kind == 16) {
+			if (la.kind == 15) {
 				Get();
 			} else {
 				Get();
@@ -302,7 +325,7 @@ out type);
 
 	void ProcDecl(string progName) {
 		Obj obj; string procName; 
-		Expect(15);
+		Expect(17);
 		Ident(out procName);
 		obj = tab.NewObj(procName, proc, undef,1,0,0, false,"null");
 		if (procName == "main")
@@ -311,9 +334,9 @@ out type);
 		  else SemErr("main not at lexic level 0");
 		tab.OpenScope();
 		
-		Expect(8);
-		Expect(9);
-		Expect(16);
+		Expect(10);
+		Expect(11);
+		Expect(18);
 		while (StartOf(2)) {
 			if (la.kind == 46) {
 				ConstantDecl();
@@ -323,7 +346,7 @@ out type);
 				ArrayDecl();
 			}
 		}
-		while (la.kind == 15) {
+		while (la.kind == 17) {
 			ProcDecl(progName);
 		}
 		if (procName == "main")
@@ -337,7 +360,7 @@ out type);
 		while (StartOf(3)) {
 			Stat();
 		}
-		Expect(17);
+		Expect(19);
 		if (procName == "main") {
 		  gen.StopProgram(progName);
 		  gen.Enter("Main", tab.curLevel, tab.topScope.nextAdr);
@@ -376,46 +399,47 @@ out type);
 		Expect(48);
 		Type(out type);
 		Ident(out name);
-		Expect(24);
+		Expect(6);
 		Expect(1);
 		type = integer;
 		r = Convert.ToInt32(t.val);
 		c = 1;
 		
-		Expect(25);
-		if (la.kind == 24) {
+		Expect(7);
+		if (la.kind == 6) {
 			Get();
 			Expect(1);
 			type = integer;
 			c = Convert.ToInt32(t.val);
 			
-			Expect(25);
+			Expect(7);
 		}
 		tab.NewObj(name, var, type,array,r,c,false,"null"); 
 		Expect(28);
 	}
 
 	void Stat() {
-		int type; string name; Obj obj; Obj temp;int reg = 0; int index = 0; int index2 = 0; String arrayName; string structName; string sName;
+		int type; string name; Obj obj; Obj temp;int reg = 0; int regI; int index = 0; int index2 = 0; String arrayName; string structName; string sName;
 		switch (la.kind) {
 		case 2: {
 			Ident(out name);
 			obj = tab.Find(name); 
-			if (la.kind == 24) {
+			if (la.kind == 6) {
 				Get();
-				Expr(out reg,
-out type);
-				index = reg;
+				Expect(1);
+				gen.LoadConstant(index, Int32.Parse(t.val));
+				//gen.RelOp(Op.EQU,reg2,reg1);
+				//gen.BranchFalse(l2);
 				
-				Expect(25);
-				if (la.kind == 24) {
+				Expect(7);
+				if (la.kind == 6) {
 					Get();
 					Expect(1);
-					index2 = Convert.ToInt32(t.val);
-					if(index2 > obj.columns | obj.columns < 0)
-					 SemErr("array index columns out of bounds");
+					gen.GetRegister();
+					gen.LoadConstant(index2, Int32.Parse(t.val));
 					
-					Expect(25);
+					
+					Expect(7);
 				}
 			}
 			if (la.kind == 26) {
@@ -447,45 +471,21 @@ out type);
 out type);
 					if (type == obj.type)
 					  if (obj.level == 0)
-					     gen.StoreGlobal(reg, obj.adr + index +(index2*obj.rows), name);
-					  else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr + index +(index2*obj.rows), name);
+					     if(obj.sort == scalar){
+					       gen.StoreGlobal(reg, obj.adr, name);
+					     }
+					     else{
+					       gen.StoreIndexedGlobal(reg,obj.adr,index,name);
+					     }
+					  else {
+					     if(obj.sort == scalar){
+					       gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+					     }
+					     else{
+					       gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr, index,name);
+					     }
+					  }
 					else SemErr("incompatible types");
-					
-				} else if (la.kind == 24) {
-					Get();
-					int rowIndex = 0; int columnIndex = 0; 
-					Expect(1);
-					rowIndex = Convert.ToInt32(t.val);
-					Expect(25);
-					if (la.kind == 24) {
-						Get();
-						Expect(1);
-						columnIndex = Convert.ToInt32(t.val);
-						Expect(25);
-					}
-					Ident(out arrayName);
-					Obj arrayObj = tab.Find(arrayName);
-					
-					/*if(rowIndex > arrayObj.rows | rowIndex < 0){
-					 SemErr("index rows out of bounds");
-					}
-					
-					if(columnIndex > arrayObj.rows | columnIndex < 0){
-					 SemErr("index columns out of bounds");
-					}
-					
-					if(arrayObj.type != obj.type){
-					 SemErr("Incompatable types");
-					}*/
-					
-					if (arrayObj.level == 0)
-					  gen.LoadIndexedGlobal(reg, arrayObj.adr, index,arrayName);
-					else gen.LoadIndexedLocal(reg, tab.curLevel-arrayObj.level, arrayObj.adr,index , arrayName);
-					
-					if (obj.level == 0)
-					  gen.StoreIndexedGlobal(reg, obj.adr,index, name);
-					else
-					  gen.StoreIndexedLocal(reg, tab.curLevel-obj.level, obj.adr,index, name);
 					
 				} else if (la.kind == 26) {
 					Get();
@@ -516,15 +516,15 @@ out type);
 					
 				} else SynErr(54);
 				Expect(28);
-			} else if (la.kind == 8) {
+			} else if (la.kind == 10) {
 				Get();
-				Expect(9);
+				Expect(11);
 				Expect(28);
 				if (obj.kind == proc)
 				  gen.Call(name);
 				else SemErr("object is not a procedure");
 				
-			} else if (la.kind == 18) {
+			} else if (la.kind == 20) {
 				Get();
 				Expr(out reg,
 out type);
@@ -550,13 +550,13 @@ out type);
 		case 29: {
 			Get();
 			int l1, l2, l3; int reg1, reg2; int type1, type2; int check = 0; int errorCheck; 
-			Expect(8);
+			Expect(10);
 			Expr(out reg1,
 out type1);
 			l3 = 0;
 			l3 = gen.NewLabel();
 			
-			Expect(9);
+			Expect(11);
 			Expect(30);
 			while (la.kind == 31) {
 				Get();
@@ -564,7 +564,7 @@ out type1);
 				gen.GetRegister();
 				errorCheck = 0;
 				
-				Expect(8);
+				Expect(10);
 				Expr(out reg2,
 out type2);
 				if (type1 != type2){
@@ -575,7 +575,7 @@ out type2);
 				 gen.BranchFalse(l2);
 				}
 				
-				Expect(9);
+				Expect(11);
 				Stat();
 				
 				if (la.kind == 32) {
@@ -611,7 +611,7 @@ out type2);
 			l3 = 0;
 			l4 = 0;
 			
-			Expect(8);
+			Expect(10);
 			Stat();
 			l1 = gen.NewLabel();
 			gen.Label(l1);
@@ -634,13 +634,13 @@ out type);
 			gen.Branch(l1);
 			gen.Label(l3);
 			
-			Expect(9);
-			Expect(16);
+			Expect(11);
+			Expect(18);
 			Stat();
 			gen.Branch(l4);
 			gen.Label(l2);
 			
-			Expect(17);
+			Expect(19);
 			break;
 		}
 		case 36: {
@@ -735,7 +735,7 @@ out type);
 			Expect(28);
 			break;
 		}
-		case 16: {
+		case 18: {
 			Get();
 			tab.OpenSubScope(); 
 			while (la.kind == 43 || la.kind == 44 || la.kind == 46) {
@@ -749,7 +749,7 @@ out type);
 			while (StartOf(3)) {
 				Stat();
 			}
-			Expect(17);
+			Expect(19);
 			tab.CloseSubScope(); 
 			break;
 		}
@@ -778,7 +778,7 @@ out typeR);
 		Expect(42);
 		Ident(out progName);
 		tab.OpenScope(); 
-		Expect(16);
+		Expect(18);
 		while (StartOf(6)) {
 			if (la.kind == 43 || la.kind == 44) {
 				VarDecl();
@@ -790,11 +790,11 @@ out typeR);
 				StructDecl();
 			}
 		}
-		while (la.kind == 15) {
+		while (la.kind == 17) {
 			ProcDecl(progName);
 		}
 		tab.CloseScope(); 
-		Expect(17);
+		Expect(19);
 	}
 
 	void StructDecl() {
@@ -802,14 +802,14 @@ out typeR);
 		Expect(47);
 		Ident(out structName);
 		tab.NewObj(structName, var, 3, scalar, 0,0,false,"null");  
-		Expect(16);
+		Expect(18);
 		while (la.kind == 43 || la.kind == 44) {
 			Type(out type);
 			Ident(out name);
 			tab.NewObj(name, var, type, 1,0,0,false,structName); 
 			Expect(28);
 		}
-		Expect(17);
+		Expect(19);
 	}
 
 	void Type(out int type) {
@@ -836,11 +836,11 @@ out typeR);
 	
 	static readonly bool[,] set = {
 		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,x, T,x,x},
-		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,T, T,x,T,T, T,T,x,x, x,x,x,x, x,x,x},
-		{x,T,T,x, x,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,T,x,x, x,x,x,T, T,x,T,T, T,T,x,x, x,x,x,x, x,x,x},
+		{x,T,T,x, x,T,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,T,T, T,x,x}
 
 	};
@@ -861,26 +861,26 @@ public class Errors {
 			case 3: s = "string expected"; break;
 			case 4: s = "\"+\" expected"; break;
 			case 5: s = "\"-\" expected"; break;
-			case 6: s = "\"true\" expected"; break;
-			case 7: s = "\"false\" expected"; break;
-			case 8: s = "\"(\" expected"; break;
-			case 9: s = "\")\" expected"; break;
-			case 10: s = "\"*\" expected"; break;
-			case 11: s = "\"div\" expected"; break;
-			case 12: s = "\"DIV\" expected"; break;
-			case 13: s = "\"mod\" expected"; break;
-			case 14: s = "\"MOD\" expected"; break;
-			case 15: s = "\"void\" expected"; break;
-			case 16: s = "\"{\" expected"; break;
-			case 17: s = "\"}\" expected"; break;
-			case 18: s = "\"=\" expected"; break;
-			case 19: s = "\"<\" expected"; break;
-			case 20: s = "\">\" expected"; break;
-			case 21: s = "\"!=\" expected"; break;
-			case 22: s = "\"<=\" expected"; break;
-			case 23: s = "\">=\" expected"; break;
-			case 24: s = "\"[\" expected"; break;
-			case 25: s = "\"]\" expected"; break;
+			case 6: s = "\"[\" expected"; break;
+			case 7: s = "\"]\" expected"; break;
+			case 8: s = "\"true\" expected"; break;
+			case 9: s = "\"false\" expected"; break;
+			case 10: s = "\"(\" expected"; break;
+			case 11: s = "\")\" expected"; break;
+			case 12: s = "\"*\" expected"; break;
+			case 13: s = "\"div\" expected"; break;
+			case 14: s = "\"DIV\" expected"; break;
+			case 15: s = "\"mod\" expected"; break;
+			case 16: s = "\"MOD\" expected"; break;
+			case 17: s = "\"void\" expected"; break;
+			case 18: s = "\"{\" expected"; break;
+			case 19: s = "\"}\" expected"; break;
+			case 20: s = "\"=\" expected"; break;
+			case 21: s = "\"<\" expected"; break;
+			case 22: s = "\">\" expected"; break;
+			case 23: s = "\"!=\" expected"; break;
+			case 24: s = "\"<=\" expected"; break;
+			case 25: s = "\">=\" expected"; break;
 			case 26: s = "\".\" expected"; break;
 			case 27: s = "\":=\" expected"; break;
 			case 28: s = "\";\" expected"; break;
