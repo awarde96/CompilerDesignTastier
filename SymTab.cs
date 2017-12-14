@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace Tastier {
 
@@ -13,6 +14,7 @@ public class Obj { // properties of declared symbol
    public int adr;     // address (displacement) in scope
    public bool hasValue;
    public string parent;
+   public ArrayList children;
    public Obj next;    // ptr to next object in scope
    // for scopes
    public Obj outer;   // ptr to enclosing scope
@@ -115,7 +117,7 @@ public class SymbolTable {
           sortName = "array";
         }
 
-        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}, parent: {5}",temp.name, typeName, kindName, sortName, temp.adr, temp.parent);
+        Console.WriteLine("   ;Name: {0}, Type: {1}, Kind: {2}, Sort: {3}, address: {4}, structType: {5}",temp.name, typeName, kindName, sortName, temp.adr, temp.parent);
 
         if (sort == 2){
           Console.WriteLine("   ;Rows: {0}, Columns: {1}", temp.rows, temp.columns);
@@ -148,7 +150,7 @@ public class SymbolTable {
    }
 
 // create new object node in current scope
-   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns, bool hasValue, string parent ) {
+   public Obj NewObj(string name, int kind, int type, int sort, int rows, int columns, bool hasValue, string parent) {
       Obj p, last;
       Obj obj = new Obj();
       obj.name = name; obj.kind = kind; obj.sort = sort;

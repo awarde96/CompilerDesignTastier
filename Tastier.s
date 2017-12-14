@@ -13,15 +13,15 @@ set
     BL      enter           ; build new stack frame
     B       setBody
 MainBody
+    LDR     R5, =2
+    LDR R2, =33
+    ADD R2, R4, R2, LSL #2
+    STR R5, [R2] ; pic
     LDR     R5, =3
     LDR R2, =3
     ADD R2, R4, R2, LSL #2
     STR R5, [R2] ; xy
-    LDR     R5, =2
-    LDR R2, =16
-    ADD R2, R4, R2, LSL #2
-    STR R5, [R2] ; a
-    LDR R2, =16
+    LDR R2, =33
     ADD R2, R4, R2, LSL #2
     LDR R0, [R2] ; b
     LDR R2, =0
@@ -30,7 +30,7 @@ MainBody
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L1
-    DCB     "a.b := ", 0
+    DCB     "pic.b := ", 0
     ALIGN
 L1
     LDR R2, =0
@@ -89,20 +89,30 @@ L3
     LDR R5, [R2] ; i
     MOV     R0, R5
     BL      TastierPrintIntLf
-    LDR     R0, =1
-    LDR     R5, =9
-    LDR     R2, =4
+    LDR     R0, =2
+    LDR     R5, =2
+    LDR     R6, =4
+    MUL     R5, R6, R5
+    ADD     R0, R0, R5
+    LDR     R7, =77
+    LDR     R2, =15
     ADD     R2, R4, R2, LSL #2
-    STR     R5, [R2, R0, LSL #2] ; value of zzz[]
-    LDR     R0, =0
-    LDR     R5, =7
-    LDR     R2, =8
+    STR     R7, [R2, R0, LSL #2] ; value of yyy[]
+    LDR     R6, =2
+    LDR     R7, =2
+    LDR     R8, =4
+    MUL     R7, R8, R7
+    ADD     R6, R6, R7
+    LDR     R2, =15
     ADD     R2, R4, R2, LSL #2
-    STR     R5, [R2, R0, LSL #2] ; value of xyz[]
+    LDR     R8, [R2, R6, LSL #2] ; value of yyy[]
+    LDR R2, =0
+    ADD R2, R4, R2, LSL #2
+    STR R8, [R2] ; i
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
     B       L4
-    DCB     "[2][2]yyy = ", 0
+    DCB     "yyy[2][2] = ", 0
     ALIGN
 L4
     LDR R2, =0
@@ -226,20 +236,23 @@ StopTest
     B       StopTest
 Main
     LDR     R0, =1          ; current lexic level
-    LDR     R1, =0          ; number of local variables
+    LDR     R1, =1          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-   ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 0, parent: null
-   ;Name: j, Type: integer, Kind: var, Sort: scalar, address: 1, parent: null
-   ;Name: n, Type: integer, Kind: var, Sort: scalar, address: 2, parent: null
-   ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 3, parent: null
-   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 4, parent: null
+   ;Name: pic, Type: struct, Kind: var, Sort: scalar, address: 0, structType: a
+   ;Name: i, Type: integer, Kind: var, Sort: scalar, address: 0, structType: null
+   ;Name: j, Type: integer, Kind: var, Sort: scalar, address: 1, structType: null
+   ;Name: n, Type: integer, Kind: var, Sort: scalar, address: 2, structType: null
+   ;Name: xy, Type: integer, Kind: const, Sort: scalar, address: 3, structType: null
+   ;Name: zzz, Type: integer, Kind: var, Sort: array, address: 4, structType: null
    ;Rows: 3, Columns: 1
-   ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 8, parent: null
+   ;Name: xyz, Type: integer, Kind: var, Sort: array, address: 8, structType: null
    ;Rows: 6, Columns: 1
-   ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 15, parent: null
-   ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 16, parent: a
-   ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 17, parent: a
-   ;Name: check, Type: struct, Kind: var, Sort: scalar, address: 18, parent: null
-   ;Name: set, Type: undef, Kind: proc, Sort: scalar, address: 0, parent: null
-   ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0, parent: null
+   ;Name: yyy, Type: integer, Kind: var, Sort: array, address: 15, structType: null
+   ;Rows: 4, Columns: 4
+   ;Name: a, Type: struct, Kind: var, Sort: scalar, address: 32, structType: null
+   ;Name: b, Type: integer, Kind: var, Sort: scalar, address: 33, structType: a
+   ;Name: c, Type: boolean, Kind: var, Sort: scalar, address: 34, structType: a
+   ;Name: check, Type: struct, Kind: var, Sort: scalar, address: 35, structType: null
+   ;Name: set, Type: undef, Kind: proc, Sort: scalar, address: 0, structType: null
+   ;Name: main, Type: undef, Kind: proc, Sort: scalar, address: 0, structType: null

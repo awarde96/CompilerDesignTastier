@@ -8,7 +8,7 @@ program Test {
    const int xy;
    array int zzz[3];
    array int xyz[6];
-   //array int yyy[4][4];
+   array int yyy[4][4];
 
    struct a {
     int b;
@@ -25,28 +25,24 @@ program Test {
 
 
    void main(){
+      new a pic;
+      pic.b := 2;
       xy = 3;
-      a.b := 2;
-      i := .a.b;
-      write "a.b := ";
+      i := .pic.b;
+      write "pic.b := ";
       writeln i;
       write "Constant xy = ";
       writeln xy;
       zzz[2] := 8;
       i := zzz[2];
       writeln i;
-      //i := 8;
-      //zzz[2] := 3;
       zzz[0] := 88;
       i := zzz[0];
       write "[0]zzz = ";
       writeln i;
-      zzz[1] := 9;
-      xyz[0] := 7;
-      //yyy[0][0] := 6;
-      //yyy[2][2] := 12;
-      //i := [2][2]yyy;
-      write "[2][2]yyy = ";
+      yyy[2][2] := 77;
+      i := yyy[2][2];
+      write "yyy[2][2] = ";
       writeln i;
       i := 2;
 

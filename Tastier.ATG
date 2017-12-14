@@ -73,12 +73,12 @@ Expr<out int reg,        // load value of Expr into register
 /*-------------------------------------------------------------------------------------------*/
 
 Primary<out int reg,     // load Primary into register
-        out int type>    (. int n; Obj obj; string name; int index=0;.)
+        out int type>    (. int n; Obj obj; string name; int index=0; int index2=0;.)
 =                        (.
                             type = undef;
                             reg = gen.GetRegister();
                          .)
-  ( Ident<out name>      (..)
+  ( Ident<out name>      (. obj = tab.Find(name); .)
     [
       "["
         Expr<out reg,
@@ -86,6 +86,19 @@ Primary<out int reg,     // load Primary into register
                             index = reg;
                          .)
       "]"
+      [
+      "["
+          number          (.gen.GetRegister();
+                            gen.GetRegister();
+                            index2 = gen.GetRegister();
+                            gen.LoadConstant(index2, Int32.Parse(t.val));
+                            reg = gen.GetRegister();
+                            gen.LoadConstant(reg, obj.rows);
+                            gen.MulOp(Op.MUL, index2,reg);
+                            gen.AddOp(Op.ADD, index, index2);
+                            .)
+      "]"
+      ]
     ]
                           (.  obj = tab.Find(name); type = obj.type;
                             if (obj.sort == scalar){
@@ -184,8 +197,9 @@ ProcDecl<string progName>
   '(' ')'
   '{'
      {
-     ConstantDecl | VarDecl | ArrayDecl
+     ConstantDecl | VarDecl | ArrayDecl | StructAssign
      }
+
      {
      ProcDecl<progName>
      }                   (.
@@ -256,8 +270,12 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
     [
       "["
           number         (.
-                           gen.GetRegister();
+                           index2 = gen.GetRegister();
                            gen.LoadConstant(index2, Int32.Parse(t.val));
+                           reg = gen.GetRegister();
+                           gen.LoadConstant(reg, obj.rows);
+                           gen.MulOp(Op.MUL, index2, reg);
+                           gen.AddOp(Op.ADD, index, index2);
                          .)
       "]"
     ]
@@ -266,7 +284,7 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
     '.'
     Ident<out structName>      (.
                                  temp = tab.Find(structName);
-                                 if(temp.parent == obj.name){
+                                 if(temp.parent == obj.parent){
                                     obj = temp;
                                  }
                                  else{
@@ -322,7 +340,7 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
                                  if(temp1.type != structure){
                                     SemErr("Must be of type structure");
                                  }
-                                 if(temp1.name != temp.parent){
+                                 if(temp1.parent != temp.parent){
                                     SemErr("Variable does not belong to struct");
                                  }
 
@@ -610,7 +628,7 @@ ConstantDecl                (. string name; int type;.)
 
 /*-------------------------------------------------------------------------------------------*/
 
-StructDecl               (. string name; string structName; int type; .)
+StructDecl               (. string name; string structName; int type;.)
 =
   "struct"
   Ident<out structName>        (. tab.NewObj(structName, var, 3, scalar, 0,0,false,"null");  .)
@@ -621,6 +639,20 @@ StructDecl               (. string name; string structName; int type; .)
       ';'
     }
   '}'
+.
+/*-------------------------------------------------------------------------------------------*/
+
+StructAssign           (. string name; string structName; Obj obj; .)
+=
+  "new"
+  Ident<out structName> (.obj = tab.Find(structName);
+                            if (obj.type != structure){
+                                SemErr("Must be of type stucture");
+                            }
+                        .)
+
+  Ident<out name>       (. tab.NewObj(name, var, 3, scalar, 0,0,false,structName);  .)
+  ';'
 .
 /*-------------------------------------------------------------------------------------------*/
 ArrayDecl                (. int r; int c = 0; string name; int type;.)
