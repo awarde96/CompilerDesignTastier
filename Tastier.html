@@ -21,15 +21,19 @@
 <p class="p2"><span class="s1">ProcDecl = <span class="Apple-converted-space">  </span>"void" ident "(" ")"</span></p>
 <p class="p2"><span class="s1">ConstDecl =<span class="Apple-converted-space">    </span>"const" Type ident  ";"</span></p>
 <p class="p2"><span class="s1">ArrayDecl =<span class="Apple-converted-space">    </span>"array" Type ident "[" number "]" [ "[" number "]" ] ";"</span></p>
+<p class="p2"><span class="s1">StructDecl =<span class="Apple-converted-space">    </span>"struct" ident "{" { Type Ident } "}" ";"</span></p>
+<p class="p2"><span class="s1">StructAssign =<span class="Apple-converted-space">    </span>"new" StructType ident "{" { Type Ident } "}";"</span></p>
 <p class="p2"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s1">"{" {VarDecl} {ProcDecl} {constDecl} {arrayDecl} Stat {Stat} "}"</span></p>
 <p class="p2"><span class="s1"><br>
 </span></p>
 <p class="p2"><span class="s1">Type = <span class="Apple-converted-space">      </span>"int" | "bool"</span></p>
 <p class="p2"><span class="s1"><br>
 </span></p>
-<p class="p2"><span class="s1">Stat = <span class="Apple-converted-space">      </span>ident [ "[" number "]" ] [ "[" number "]" ](":=" (Expr | "[" number "]" [ "[" number "]" ] ident) ";" | "(" ")" ";")</span></p>
+<p class="p2"><span class="s1">Stat = <span class="Apple-converted-space">      </span>ident [ "[" number "]" ] [ "[" number "]" ] [ "." Ident ](":=" (Expr | ". Ident "." Ident) ";" | "(" ")" ";")</span></p>
 <p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "=" ident ";"</span></p>
 <p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "if" Expr Stat ["else" Stat]</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "switch" "(" Expr ";" ")" { "case" "(" Expr ")" stat } "default" stat</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "for" "(" stat Expr ";" stat ")" "{" {stat} "}"</span></p>
 <p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "while Expr Stat</span></p>
 <p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "read" ident ";"</span></p>
 <p class="p2"><span class="s1"><span class="Apple-converted-space">           </span>| "write" Expr | string ";"</span></p>
