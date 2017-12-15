@@ -205,7 +205,7 @@ out typeR);
 
 	void Primary(out int reg,     // load Primary into register
 out int type) {
-		int n; Obj obj; string name; int index=0; int index2=0;
+		int n; Obj obj; string name; int index=0; int index2=0; int l1 = 0; int reg1 = 0;
 		type = undef;
 		reg = gen.GetRegister();
 		
@@ -217,7 +217,14 @@ out int type) {
 				Get();
 				Expr(out reg,
 out type);
+				l1 = gen.NewLabel();
 				index = reg;
+				reg1 = gen.GetRegister();
+				gen.LoadConstant(reg1, obj.rows);
+				gen.RelOp(Op.LEQ,reg1, index);
+				gen.BranchFalse(l1);
+				gen.WriteString("\"Index rows out of bounds\"");
+				gen.Label(l1);
 				
 				Expect(7);
 				if (la.kind == 6) {
@@ -456,7 +463,8 @@ out type);
 			obj = tab.Find(name); 
 			if (la.kind == 6) {
 				Get();
-				Expect(1);
+				Expr(out reg,
+out type);
 				gen.LoadConstant(index, Int32.Parse(t.val));
 				//gen.RelOp(Op.EQU,reg2,reg1);
 				//gen.BranchFalse(l2);

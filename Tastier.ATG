@@ -73,7 +73,7 @@ Expr<out int reg,        // load value of Expr into register
 /*-------------------------------------------------------------------------------------------*/
 
 Primary<out int reg,     // load Primary into register
-        out int type>    (. int n; Obj obj; string name; int index=0; int index2=0;.)
+        out int type>    (. int n; Obj obj; string name; int index=0; int index2=0; int l1 = 0; int reg1 = 0;.)
 =                        (.
                             type = undef;
                             reg = gen.GetRegister();
@@ -83,12 +83,20 @@ Primary<out int reg,     // load Primary into register
       "["
         Expr<out reg,
             out type>    (.
+                            l1 = gen.NewLabel();
                             index = reg;
+                            reg1 = gen.GetRegister();
+                            gen.LoadConstant(reg1, obj.rows);
+                            gen.RelOp(Op.LEQ,reg1, index);
+                            gen.BranchFalse(l1);
+                            gen.WriteString("\"Index rows out of bounds\"");
+                            gen.Label(l1);
                          .)
       "]"
       [
       "["
-          number          (.gen.GetRegister();
+          number          (.
+                            gen.GetRegister();
                             gen.GetRegister();
                             index2 = gen.GetRegister();
                             gen.LoadConstant(index2, Int32.Parse(t.val));
@@ -96,7 +104,7 @@ Primary<out int reg,     // load Primary into register
                             gen.LoadConstant(reg, obj.rows);
                             gen.MulOp(Op.MUL, index2,reg);
                             gen.AddOp(Op.ADD, index, index2);
-                            .)
+                          .)
       "]"
       ]
     ]
@@ -259,7 +267,8 @@ Stat                     (. int type; string name; Obj obj; Obj temp;int reg = 0
 = Ident<out name>        (. obj = tab.Find(name); .)
   [
     "["
-        number
+        Expr<out reg,
+            out type>
                          (.
 
                             gen.LoadConstant(index, Int32.Parse(t.val));
